@@ -1,13 +1,13 @@
-import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import type { Route } from './+types/home';
+import SproutScout from '../components/SproutScout';
 
 export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
+	return [
+		{ title: 'Sprout Scout' },
+		{ name: 'description', content: 'Welcome to Sprout Scout!' },
+	];
 }
 
 export default function Home() {
-  return <Welcome />;
+	return <SproutScout />;
 }
