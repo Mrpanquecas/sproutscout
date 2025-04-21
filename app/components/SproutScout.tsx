@@ -2,17 +2,22 @@ import React, { useState } from 'react';
 import {
 	allVegetables,
 	type ClimateTypes,
-	type PlantedVegetable,
 	type VegetableInfo,
 } from '~/utils/constants';
 import { climateZones, monthNames } from '../utils/constants';
+import { useGardenStore } from '~/store/store';
 
 const SproutCout = () => {
+	const {
+		climateZone,
+		setClimateZone,
+		plantedPlants,
+		setPlantedPlants,
+		plantArea,
+		setPlantArea,
+	} = useGardenStore();
 	const [activeTab, setActiveTab] = useState('planner');
 	const [currentMonth] = useState(new Date().getMonth());
-	const [plantings, setPlantings] = useState<PlantedVegetable[]>([]);
-	const [plantArea, setPlantArea] = useState(1);
-	const [climateZone, setClimateZone] = useState<ClimateTypes>('temperate');
 	const [gardenLayout, setGardenLayout] = useState([]);
 	const [gardenSize, setGardenSize] = useState({ width: 6, height: 4 });
 	const [selectedVeggie, setSelectedVeggie] = useState<VegetableInfo | null>(
@@ -63,13 +68,13 @@ const SproutCout = () => {
 			companionPlants: veggie.companionPlants,
 		};
 
-		setPlantings([...plantings, newPlanting]);
+		setPlantedPlants([...plantedPlants, newPlanting]);
 
 		// Switch to planner tab
 		//setActiveTab('planner');
 	};
 
-	const calculateYield = (veggie: VegetableInfo, area) => {
+	const calculateYield = (veggie: VegetableInfo, area: number) => {
 		// Extract just the numbers (assuming format like "3-5 kg per m²")
 		const yieldString = veggie.yieldPerSqM;
 		const match = yieldString.match(/(\d+)-(\d+)/);
@@ -85,7 +90,7 @@ const SproutCout = () => {
 	};
 
 	const removePlanting = (id: number) => {
-		setPlantings(plantings.filter((p) => p.id !== id));
+		setPlantedPlants(plantedPlants.filter((p) => p.id !== id));
 	};
 
 	const formatDate = (date) => {
@@ -127,7 +132,7 @@ const SproutCout = () => {
 			newLayout[y][x] = { ...cell, veggie: selectedVeggie };
 
 			// Add to plantings if not already there
-			const existingPlanting = plantings.find(
+			const existingPlanting = plantedPlants.find(
 				(p) => p.name === selectedVeggie.name
 			);
 			if (!existingPlanting) {
@@ -306,14 +311,14 @@ const SproutCout = () => {
 						</div>
 					</div>
 
-					{plantings.length === 0 ? (
+					{plantedPlants.length === 0 ? (
 						<div className="text-center py-8 text-gray-500">
 							<p>You haven't added any plantings yet.</p>
 							<p>Click "Add Random Veggie" to get started!</p>
 						</div>
 					) : (
 						<div className="space-y-4">
-							{plantings.map((planting) => (
+							{plantedPlants.map((planting) => (
 								<div
 									key={planting.id}
 									className="p-4 rounded border bg-white border-green-200"
@@ -772,96 +777,6 @@ const SproutCout = () => {
 									<div>Double click: Add a note</div>
 								</div>
 							</div>
-						</div>
-					</div>
-				</div>
-			)}
-
-			{activeTab === 'calendar' && (
-				<div>
-					<div className="mb-4">
-						<h2 className="text-xl text-green-700">Annual Planting Calendar</h2>
-						<p className="text-sm text-gray-600">
-							Visual guide for when to plant throughout the year in your{' '}
-							{climateZones.find((z) => z.id === climateZone)?.name} climate
-						</p>
-					</div>
-
-					<div className="overflow-x-auto">
-						<table className="min-w-full bg-white border border-gray-200">
-							<thead>
-								<tr>
-									<th className="py-2 px-4 border-b border-gray-200 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Vegetable
-									</th>
-									{monthNames.map((month) => (
-										<th
-											key={month}
-											className="py-2 px-3 border-b border-gray-200 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-										>
-											{month.substring(0, 3)}
-										</th>
-									))}
-								</tr>
-							</thead>
-							<tbody>
-								{vegetables.map((veggie) => (
-									<tr key={veggie.id} className="hover:bg-gray-50">
-										<td className="py-2 px-4 border-b border-gray-200 text-sm font-medium">
-											{veggie.name}
-										</td>
-										{monthNames.map((month, idx) => {
-											const isPlantingMonth =
-												veggie.bestPlantingMonths.includes(idx + 1);
-											const harvestMonth: number[] = [];
-											veggie.bestPlantingMonths.forEach((plantMonth) => {
-												const hMonth =
-													((plantMonth -
-														1 +
-														Math.ceil(veggie.timeToHarvest / 30)) %
-														12) +
-													1;
-												harvestMonth.push(hMonth);
-											});
-											const isHarvestMonth = harvestMonth.includes(idx + 1);
-
-											return (
-												<td
-													key={month}
-													className="py-2 px-1 border-b border-gray-200 text-center"
-												>
-													{isPlantingMonth && (
-														<div
-															className="h-4 w-4 rounded-full bg-green-500 mx-auto"
-															title="Plant"
-														></div>
-													)}
-													{isHarvestMonth && (
-														<div
-															className="h-4 w-4 rounded-full bg-amber-500 mx-auto mt-1"
-															title="Harvest"
-														></div>
-													)}
-													{!isPlantingMonth && !isHarvestMonth && (
-														<div className="h-4 w-4 mx-auto"></div>
-													)}
-												</td>
-											);
-										})}
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
-
-					<div className="flex justify-center gap-6 mt-4">
-						<div className="flex items-center">
-							<div className="h-4 w-4 rounded-full bg-green-500 mr-2"></div>
-							<span className="text-sm text-gray-600">Planting time</span>
-						</div>
-						<div className="flex items-center">
-							<div className="h-4 w-4 rounded-full bg-amber-500 mr-2"></div>
-							<span className="text-sm text-gray-600">Harvest time</span>
 						</div>
 					</div>
 				</div>

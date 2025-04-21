@@ -295,6 +295,7 @@ export type VegetableInfo = {
 	climateZones: {
 		[key in ClimateTypes]: number[];
 	};
+	bestPlantingMonths?: number[];
 };
 
 export type PlantedVegetable = VegetableInfo & {
@@ -303,3 +304,21 @@ export type PlantedVegetable = VegetableInfo & {
 	area: string;
 	estimatedYield: string;
 };
+
+export type GardenCell = {
+	x: number;
+	y: number;
+	veggie: VegetableInfo | null;
+};
+
+export type GardenSize = {
+	width: number;
+	height: number;
+};
+
+export type EditingNoteCell = {
+	x: number;
+	y: number;
+};
+
+export type GardenLayout = GardenCell[][];
