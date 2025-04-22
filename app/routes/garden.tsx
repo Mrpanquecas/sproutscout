@@ -6,6 +6,7 @@ import { monthNames } from '../utils/constants';
 import type { Route } from '../+types/root';
 import { calculateYield } from '../utils/calculate-yield';
 import { formatDate } from '../utils/format-date';
+import { calculateTimeToHarvest } from '~/utils/calculate-time-to-harvest';
 
 export async function loader({ _params }: Route.LoaderArgs) {
 	return {};
@@ -126,8 +127,10 @@ export default function garden() {
 									{planting.plantDate}
 								</div>
 								<div>
-									<span className="text-gray-500">Harvest Around:</span>{' '}
-									{planting.harvestDate}
+									<span className="text-gray-500">
+										Harvest window starts in:
+									</span>{' '}
+									{calculateTimeToHarvest(planting.harvestDate)}
 								</div>
 								<div>
 									<span className="text-gray-500">Area:</span> {planting.area}
