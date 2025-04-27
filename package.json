@@ -6,7 +6,6 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "netlify serve",
-    //"start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
