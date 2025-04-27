@@ -4,6 +4,11 @@ import {
 	allVegetables,
 	growingTipDescriptions,
 	monthNames,
+	plantGrowthHabitDescriptions,
+	soilTypeDescriptions,
+	spacingRequirementDescriptions,
+	sunlightRequirementDescriptions,
+	waterRequirementDescriptions,
 } from '~/utils/constants';
 import { useLoaderData, useNavigate } from 'react-router';
 import { useGardenStore } from '~/store/store';
@@ -36,9 +41,6 @@ export default function VegetableDetails() {
 			<div className="flex justify-between items-start mb-6">
 				<div>
 					<h2 className="text-2xl font-bold text-green-700">{veggie.name}</h2>
-					<p className="text-sm text-gray-600">
-						{veggie.growthHabit} type plant
-					</p>
 				</div>
 				<div className="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">
 					Harvest in {veggie.timeToHarvest} days
@@ -49,7 +51,9 @@ export default function VegetableDetails() {
 				<h3 className="text-xl font-semibold text-green-700 mb-2">
 					Description
 				</h3>
-				<p className="text-gray-700">{veggie.description}</p>
+				<p className="text-sm text-gray-600">
+					{plantGrowthHabitDescriptions[veggie.growthHabit]}
+				</p>
 			</div>
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -59,17 +63,20 @@ export default function VegetableDetails() {
 					</h3>
 					<ul className="space-y-2">
 						<li className="text-gray-700">
-							<span className="font-medium">Spacing:</span> {veggie.spacing}
+							<span className="font-medium">Spacing:</span>{' '}
+							{spacingRequirementDescriptions[veggie.spacing]}
 						</li>
 						<li className="text-gray-700">
-							<span className="font-medium">Sunlight:</span> {veggie.sunlight}
+							<span className="font-medium">Sunlight:</span>{' '}
+							{sunlightRequirementDescriptions[veggie.sunlight]}
 						</li>
 						<li className="text-gray-700">
-							<span className="font-medium">Soil:</span> {veggie.soilType}
+							<span className="font-medium">Soil:</span>{' '}
+							{soilTypeDescriptions[veggie.soilType]}
 						</li>
 						<li className="text-gray-700">
 							<span className="font-medium">Water:</span>{' '}
-							{veggie.waterRequirement}
+							{waterRequirementDescriptions[veggie.waterRequirement]}
 						</li>
 					</ul>
 				</div>

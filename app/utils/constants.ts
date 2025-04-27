@@ -3376,3 +3376,87 @@ export const growingTipDescriptions = {
 		'Prefers growing medium with pH below 7.0 for optimal nutrient uptake and growth.',
 	alkaline_soil: 'Grows best in soil with pH above 7.0.',
 };
+
+// Sunlight exposure requirements
+export const sunlightRequirementDescriptions = {
+	full_sun: 'Requires at least 6 hours of direct sunlight daily.',
+
+	partial_sun: 'Needs 4-6 hours of direct sunlight daily.',
+
+	partial_shade:
+		'Requires 2-4 hours of direct sunlight or filtered light throughout the day.',
+
+	full_shade:
+		'Grows with less than 2 hours of direct sunlight or in completely filtered light.',
+};
+
+// Daily hours of sunlight needed
+export const dailySunlightRequirementDescriptions = {
+	low: 'Requires less than 4 hours of sunlight daily.',
+
+	medium: 'Needs approximately 4-6 hours of direct sunlight daily.',
+
+	high: 'Demands 6 or more hours of direct sunlight daily for optimal growth.',
+};
+
+// Soil composition types
+export const soilTypeDescriptions = {
+	sandy:
+		'(Sandy) gritty soil with large particles; drains quickly and warms early.',
+	loamy:
+		'(Loamy) balanced soil with ideal texture; retains moisture while draining well.',
+	clay: '(Clay) dense, heavy soil; holds nutrients well but drains poorly.',
+	peaty:
+		'(Peaty) dark, acidic soil high in organic matter; retains moisture extremely well.',
+	chalky:
+		'(Chalky) alkaline, stony soil with high calcium content; drains quickly.',
+	silty:
+		'(Silty) smooth, fine-textured soil; retains moisture but can easily compact.',
+};
+
+// Water needs during growing season
+export const waterRequirementDescriptions = {
+	low: 'Requires minimal supplemental watering once established.',
+
+	medium: 'Needs consistent moisture without waterlogging.',
+
+	high: 'Demands consistently moist soil throughout the growing season.',
+};
+
+// Plant growth patterns and habits
+export const plantGrowthHabitDescriptions = {
+	determinate:
+		'Grows to a predetermined size, typically bush-like, then flowers and fruits all at once. Growth stops after fruit set. Common in certain tomato varieties bred for containers or areas with short growing seasons. Harvest period is concentrated over a few weeks, ideal for canning or preserving.',
+
+	indeterminate:
+		'Continues growing, flowering, and fruiting until killed by frost or disease. These plants form vining structures that require support and regular pruning. Common in many heirloom tomato varieties. Provides extended harvest over a long season but requires more maintenance and space.',
+
+	bush: 'Forms a compact, self-supporting plant with limited height and spread. Typically does not require staking or support. Often better suited for containers and small spaces. Many bean varieties, summer squash, and certain herbs display this habit.',
+
+	vining:
+		'Produces long stems that either climb with support or sprawl along the ground. These plants use tendrils, twining stems, or other methods to attach to supports. Maximizes production in limited ground space by growing vertically. Common in peas, cucumbers, melons, and winter squash.',
+
+	upright:
+		'Grows primarily vertical with a central stem and limited lateral spread. May require staking for stability, especially when bearing fruit or in windy conditions. Allows for closer spacing than spreading types. Examples include corn, Brussels sprouts, and many herbs.',
+
+	rosette:
+		'Forms a circular arrangement of leaves radiating from a central point at ground level, with no true stem. Common in many leafy greens like lettuce, spinach, and chard. Easy to harvest by cutting outer leaves while allowing center to continue growing.',
+
+	clumping:
+		'Produces multiple stems or shoots from a central crown, gradually increasing in circumference. Often seen in perennial vegetables and herbs that benefit from division every few years to maintain vigor. Examples include chives, rhubarb, and asparagus.',
+
+	spreading:
+		'Extends horizontally through runners, rhizomes, or sprawling growth. Can quickly cover ground but may become invasive if not contained. Good for ground cover and erosion control. Examples include strawberries, mint, and some squash varieties.',
+
+	mounding:
+		'Forms a rounded or dome-shaped growth habit, wider than tall with a soft, often billowing appearance. Intermediate between bush and spreading types. Examples include certain varieties of basil, parsley, and some lettuce cultivars.',
+};
+
+export const spacingRequirementDescriptions = {
+	very_close: '5-15 cm apart; suitable for small herbs and leafy greens.',
+	close: '15-30 cm apart; ideal for root vegetables and compact greens.',
+	moderate: '30-60 cm apart; standard spacing for most garden vegetables.',
+	wide: '60-90 cm apart; needed for larger plants with substantial leaf spread.',
+	very_wide:
+		'90+ cm apart; required for sprawling vines and large vegetable plants.',
+};
