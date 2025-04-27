@@ -118,15 +118,23 @@ export default function guide() {
 										{veggie.companionPlants.join(', ')}
 									</p>
 								</div>
-								<button
-									disabled={gardenHasVeggiePlanted}
-									onClick={() => addSpecificVeggie(veggie.id)}
-									className="mt-3 bg-green-600 text-white px-3 py-1 rounded text-sm"
-								>
-									{gardenHasVeggiePlanted
-										? 'Already in Garden'
-										: 'Add to My Garden'}
-								</button>
+								<div className="gap-4 flex">
+									<button
+										disabled={gardenHasVeggiePlanted}
+										onClick={() => addSpecificVeggie(veggie.id)}
+										className="mt-3 bg-green-600 text-white px-3 py-1 rounded text-sm"
+									>
+										{gardenHasVeggiePlanted
+											? 'Already in Garden'
+											: 'Add to My Garden'}
+									</button>
+									<button
+										onClick={() => navigate(`/vegetable/${veggie.id}`)}
+										className="mt-3 bg-green-600 text-white px-3 py-1 rounded text-sm"
+									>
+										See details
+									</button>
+								</div>
 							</div>
 						);
 					})}

@@ -11,10 +11,6 @@ export const calculateTimeToHarvest = (harvestDateString: string): string => {
 	const diffDays = Math.ceil(
 		(harvestDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
 	);
-	//console.log(diffDays);
-	console.log(harvestDateString);
-	console.log(harvestDate.getTime());
-	console.log(today.getTime());
 
 	if (diffDays <= 0) {
 		return 'Now!';

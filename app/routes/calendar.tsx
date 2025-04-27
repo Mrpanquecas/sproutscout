@@ -1,11 +1,17 @@
 import React from 'react';
 import { useGardenStore } from '../store/store';
-import { climateZones, monthNames, allVegetables } from '~/utils/constants';
+import { allVegetables, climateZones, monthNames } from '~/utils/constants';
+import { useLoaderData } from 'react-router';
+
+export function loader() {
+	return { allVegetables };
+}
 
 export default function calendar() {
+	const data = useLoaderData<typeof loader>();
 	const { climateZone } = useGardenStore();
 
-	const vegetables = allVegetables.map((veggie) => ({
+	const vegetables = data.allVegetables.map((veggie) => ({
 		...veggie,
 		bestPlantingMonths: veggie.climateZones[climateZone] || [],
 	}));

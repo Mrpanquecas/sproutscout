@@ -49,9 +49,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
 	return (
-		<AuthProvider>
+		// example with auth provider
+		/* 		<AuthProvider>
 			<Outlet />
-		</AuthProvider>
+		</AuthProvider> */
+		<Outlet />
 	);
 }
 

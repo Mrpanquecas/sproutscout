@@ -12,8 +12,6 @@ interface GardenState {
 	setClimateZone: (climate: ClimateTypes) => void;
 	plantedPlants: PlantedVegetable[];
 	setPlantedPlants: (plant: PlantedVegetable[]) => void;
-	plantArea: number;
-	setPlantArea: (number: number) => void;
 	currentMonth: number;
 	gardenLayout: GardenLayout;
 	setGardenLayout: (layout: GardenLayout) => void;
@@ -32,8 +30,6 @@ export const useGardenStore = create<GardenState>()(
 				setClimateZone: (climate) => set({ climateZone: climate }),
 				plantedPlants: [],
 				setPlantedPlants: (vetables) => set({ plantedPlants: vetables }),
-				plantArea: 1,
-				setPlantArea: (area) => set({ plantArea: area }),
 				gardenLayout: [],
 				setGardenLayout: (layout) => set({ gardenLayout: layout }),
 				gardenSize: { width: 6, height: 4 },

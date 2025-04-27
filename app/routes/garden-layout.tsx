@@ -33,7 +33,6 @@ export default function layout() {
 	const [editingNoteCell, setEditingNoteCell] =
 		useState<EditingNoteCell | null>(null);
 
-	console.log(gardenLayout);
 	// Create a new garden layout grid
 	const initializeGardenLayout = (reset: boolean = false): void => {
 		if (gardenLayout.length > 0 && !reset) return;
