@@ -3185,3 +3185,194 @@ export const allVegetables: Vegetable[] = [
 		],
 	},
 ];
+
+export const growingTipDescriptions = {
+	// Plant Care and Management
+	prune_suckers:
+		'Remove small shoots growing between main stem and branches to improve air circulation and energy focus on fruit production.',
+	provide_support:
+		'Use stakes, cages, or trellises to hold plants upright and prevent damage from bending or breaking.',
+	mulch_soil:
+		'Apply organic material like straw, leaves, or compost around plants to retain moisture, suppress weeds, and regulate soil temperature.',
+	water_at_base:
+		'Apply water directly to the soil at the base of plants rather than on foliage to prevent disease.',
+	crop_rotation:
+		'Avoid planting the same family of vegetables in the same location for consecutive seasons to prevent disease buildup and nutrient depletion.',
+	hill_soil:
+		'Mound soil around the base of plants as they grow to improve stability, encourage new root growth, and increase yield.',
+	plant_deep:
+		'Set seeds or transplants deeper than usual to encourage stronger root development and plant stability.',
+	avoid_light_exposure:
+		'Keep certain parts of plants (like potato tubers) from exposure to light which can cause greening and development of toxins.',
+	harvest_after_flowering:
+		'Wait until after the plant has flowered and begun to die back before harvesting for optimal crop development.',
+	cool_storage:
+		'Store harvested crops in a cool, dark, well-ventilated place to extend shelf life and maintain quality.',
+	loosen_soil:
+		'Break up compacted soil before planting to allow for proper root development and water penetration.',
+	thin_seedlings:
+		'Remove some seedlings to provide adequate spacing for remaining plants to grow properly.',
+	consistent_moisture:
+		'Maintain even soil moisture throughout the growing season to prevent stress and ensure proper development.',
+	avoid_rocky_soil:
+		'Plant in soil free of rocks and debris to prevent misshapen root vegetables and improve growth.',
+	prevent_greening:
+		'Cover exposed portions of root vegetables with soil to prevent chlorophyll development which can cause bitterness or toxicity.',
+	plant_tips_up:
+		'Orient bulbs or tubers with the growing tip facing upward when planting for proper growth.',
+	reduce_watering_at_maturity:
+		'Decrease water as plants reach maturity to help them harden off and improve storage quality.',
+	cure_after_harvest:
+		'Allow certain vegetables to dry in a warm, ventilated area after harvest to improve storage quality and heal any wounds.',
+	pinch_flowers:
+		'Remove flower buds to redirect plant energy to vegetative growth or to prevent unwanted seeding.',
+	deadhead:
+		'Remove spent flowers to encourage continued blooming and prevent seed formation.',
+	avoid_overhead_watering:
+		'Water at soil level instead of from above to prevent leaf diseases and reduce fungal issues.',
+	harvest_regularly:
+		'Pick mature vegetables frequently to encourage continued production and prevent overripening.',
+	blanching:
+		'Cover certain plant parts to exclude light, resulting in lighter color, tenderness, and milder flavor.',
+	remove_lower_leaves:
+		'Clear leaves from the bottom portion of plants to improve air circulation and reduce disease risk.',
+	fertile_soil:
+		'Ensure soil is rich in organic matter and nutrients for optimal plant growth and production.',
+	needs_support_cage:
+		'Requires a structured cage or support system to contain growth and prevent sprawling.',
+	floating_row_cover:
+		'Use lightweight fabric covers to protect plants from pests, cold, or wind while allowing light and water to penetrate.',
+	slow_to_germinate:
+		'Seeds take longer than average to sprout; patience is required and soil should not be disturbed during this period.',
+	soak_seeds:
+		'Pre-soak seeds in water for several hours or overnight before planting to speed germination.',
+	pinch_growing_tips:
+		'Remove the top growth points to encourage bushier growth and more lateral branches.',
+	start_indoors:
+		'Begin growing seeds inside under controlled conditions several weeks before outdoor planting season.',
+	loose_soil:
+		'Ensure soil is friable and not compacted to allow for proper root development, especially for root vegetables.',
+	harvest_when_small:
+		"Pick vegetables while they're still immature for tenderness and better flavor.",
+	minimal_companions:
+		'Plant should be grown with few or no companion plants due to allelopathic effects or competition for resources.',
+	frost_improves_flavor:
+		'Exposure to light frost enhances sweetness and flavor development in certain vegetables.',
+	avoid_harvesting_first_year:
+		'Allow plant to establish for a full growing season before beginning to harvest in subsequent years.',
+	remove_flower_stalks:
+		'Cut off developing flower stems to direct energy to leaf or root production rather than seed formation.',
+	divide_every_few_years:
+		'Split perennial plants periodically to maintain vigor, control size, and multiply plants.',
+	divide_bulbs:
+		'Separate bulbs or bulblets for propagation and to prevent overcrowding.',
+	needs_constant_moisture:
+		'Requires consistently wet soil conditions without drying out to thrive.',
+	contain_spread:
+		'Take measures to prevent aggressive spreading by using barriers or regular pruning.',
+	needs_space:
+		'Requires significant planting area for proper development; do not crowd.',
+	full_maturity_for_storage:
+		'Allow to reach complete maturity before harvesting if intended for long-term storage.',
+	harvest_in_fall_or_spring:
+		'Optimal harvest time is either in autumn after growth slows or in early spring before new growth starts.',
+	needs_long_season:
+		'Requires an extended growing period from planting to harvest; not suitable for short-season climates without season extension.',
+	proper_processing_required:
+		'Needs specific preparation or cooking methods before consumption to remove toxins or improve digestibility.',
+	special_growing_conditions:
+		'Requires unique environmental factors or growing techniques beyond standard vegetable cultivation.',
+	slow_growing:
+		'Develops more slowly than most vegetables and requires patience throughout the growing cycle.',
+	wait_for_warm_soil:
+		'Delay planting until soil temperatures have sufficiently increased in late spring to avoid cold damage.',
+	avoid_rich_soil:
+		'Grows better in moderate to poor soil; excessive nutrients can cause proliferation of foliage at the expense of fruit or root development.',
+	shallow_planting:
+		'Plant seeds or transplants closer to the soil surface than standard depth.',
+	edible_roots_only:
+		'Only the underground portions are safe to eat; above-ground parts may be toxic or inedible.',
+	long_growing_season:
+		'Requires an extended time from planting to harvest compared to most vegetables.',
+	prevent_flowering:
+		'Remove flower buds before they develop to maintain leaf quality or extend the harvest period.',
+	acidic_flavor:
+		'Has a naturally tart or sour taste that may be valued for culinary uses.',
+	celery_flavor:
+		'Has a distinctive taste similar to celery that can be used as a culinary herb or vegetable.',
+	harvest_after_frost:
+		'Quality improves after exposure to cold temperatures; wait until after frost before harvesting.',
+
+	// Growing Environment
+	day_length_sensitive:
+		"Plant's flowering or bulb formation is triggered by specific hours of daylight, affecting when to plant in different regions.",
+	heat_sensitive:
+		'Does not tolerate high temperatures well; may bolt, wilt, or develop poor quality when too warm.',
+	heat_tolerant:
+		'Can withstand hot weather conditions without significant stress or decline in production.',
+	cold_hardy: 'Can withstand cold temperatures and light frost without damage.',
+	drought_resistant:
+		'Able to survive and produce with minimal water once established.',
+	shade_tolerant: 'Can grow successfully with less than full sun exposure.',
+	early_spring_crop:
+		'Best planted as soon as soil can be worked in spring for optimal production before summer heat.',
+	fall_crop:
+		'Performs best when planted in late summer for fall harvest, often improving with cooler temperatures.',
+	overwinter:
+		'Can survive winter conditions in many growing zones to produce the following season.',
+	cool_weather_crop:
+		'Prefers and performs best in cooler growing temperatures rather than summer heat.',
+
+	// Plant Structure and Growth Habits
+	support_when_fruiting:
+		'Provide extra support when plants are bearing fruit to prevent stem breakage from weight.',
+	deep_root_system:
+		'Develops extensive roots that penetrate far into the soil, accessing nutrients and moisture at greater depths.',
+	shallow_root_system:
+		'Root structure remains primarily near the soil surface, requiring careful watering and cultivation.',
+	requires_staking:
+		'Plant stems are not strong enough to support themselves, especially when bearing fruit or in windy conditions.',
+	nitrogen_fixing:
+		'Has ability to convert atmospheric nitrogen into a form usable by plants, improving soil fertility.',
+	perennial_crop:
+		'Lives for multiple years, with harvests possible in subsequent seasons after planting.',
+
+	// Planting Techniques
+	mound_planting:
+		'Create raised hills of soil for planting to improve drainage and soil warming.',
+	trench_planting:
+		'Dig a deeper furrow than usual for planting to encourage stronger stem and root development.',
+	direct_sow:
+		'Plant seeds directly in their final growing location rather than starting indoors or transplanting.',
+	submerged_planting:
+		'Grow partially or fully underwater in aquatic or boggy conditions.',
+
+	// Plant Interaction and Protection
+	requires_pollination:
+		'Needs pollen transfer between flowers (by insects or manually) to produce fruit or vegetables.',
+	hand_pollinate:
+		'Manually transfer pollen between flowers using a small brush or by hand when natural pollinators are absent.',
+	plant_in_blocks:
+		'Arrange plants in groups rather than rows to facilitate better pollination and use of space.',
+	companion_beneficial:
+		'Grows better when planted near specific companion plants that may deter pests or enhance growth.',
+
+	// Harvest and Storage
+	harvest_selectively:
+		'Pick only certain parts or at specific times while leaving the plant to continue producing.',
+	harvest_when_firm:
+		'Harvest when the vegetable feels solid and before it begins to soften for best quality and storage.',
+	prevent_blossom_end_rot:
+		'Take measures to maintain consistent soil moisture and calcium levels to prevent dark, sunken spots on fruit ends.',
+	produces_until_frost:
+		'Continues to yield harvest until killed by freezing temperatures.',
+	succession_planting:
+		'Sow seeds at intervals of 1-3 weeks to ensure continuous harvest throughout the growing season.',
+	cut_and_come_again:
+		'Harvest outer leaves or stems while allowing the plant center to continue growing for multiple harvests.',
+
+	// Soil Preferences
+	acidic_soil:
+		'Prefers growing medium with pH below 7.0 for optimal nutrient uptake and growth.',
+	alkaline_soil: 'Grows best in soil with pH above 7.0.',
+};

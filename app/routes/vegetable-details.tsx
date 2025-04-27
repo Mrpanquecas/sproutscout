@@ -1,6 +1,10 @@
 import React from 'react';
 import type { Route } from './+types/vegetable-details';
-import { allVegetables, monthNames } from '~/utils/constants';
+import {
+	allVegetables,
+	growingTipDescriptions,
+	monthNames,
+} from '~/utils/constants';
 import { useLoaderData, useNavigate } from 'react-router';
 import { useGardenStore } from '~/store/store';
 
@@ -118,9 +122,9 @@ export default function VegetableDetails() {
 					Growing Tips
 				</h3>
 				<ul className="list-disc pl-5 space-y-1">
-					{veggie.growingTips.map((tip, index) => (
+					{veggie.growingTips?.map((tip, index) => (
 						<li key={index} className="text-gray-700">
-							{tip}
+							{growingTipDescriptions[tip]}
 						</li>
 					))}
 				</ul>
