@@ -308,6 +308,7 @@ export type Vegetable = {
 	waterRequirement: WaterRequirement;
 	growthHabit: PlantGrowthHabit;
 	growingTips: GrowingTip[];
+	bestPlantingMonths?: number[];
 };
 
 export const allVegetables: Vegetable[] = [

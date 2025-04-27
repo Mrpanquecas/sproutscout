@@ -2,6 +2,7 @@ import React from 'react';
 import { useGardenStore } from '../store/store';
 import { allVegetables, climateZones, monthNames } from '~/utils/constants';
 import { useLoaderData } from 'react-router';
+import { getHarvestMonth } from '~/utils/get-harvest-month';
 
 export function loader() {
 	return { allVegetables };
@@ -53,14 +54,8 @@ export default function calendar() {
 									const isPlantingMonth = veggie.bestPlantingMonths.includes(
 										index + 1
 									);
-									const harvestMonth: number[] = [];
-									for (const plantMonth of veggie.bestPlantingMonths) {
-										const hMonth =
-											((plantMonth - 1 + Math.ceil(veggie.timeToHarvest / 30)) %
-												12) +
-											1;
-										harvestMonth.push(hMonth);
-									}
+
+									const harvestMonth = getHarvestMonth(veggie);
 									const isHarvestMonth = harvestMonth.includes(index + 1);
 
 									return (
