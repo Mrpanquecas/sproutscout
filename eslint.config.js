@@ -21,6 +21,7 @@ export default defineConfig([
 	{
 		rules: {
 			'unicorn/no-null': 'off',
+			'unicorn/prevent-abbreviations': 'off',
 		},
 	},
 	globalIgnores(['**/.react-router/']),

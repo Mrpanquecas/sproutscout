@@ -7,6 +7,7 @@ export default [
 		route('layout', 'routes/garden-layout.tsx'),
 		route('guide', 'routes/guide.tsx'),
 		route('calendar', 'routes/calendar.tsx'),
+		route('auth-callback', 'routes/auth-callback.tsx'),
 	]),
-	route('temp', 'components/SproutScout.tsx'),
+	route('login', 'routes/login.tsx'),
 ] satisfies RouteConfig;

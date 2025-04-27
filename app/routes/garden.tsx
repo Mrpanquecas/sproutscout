@@ -3,12 +3,11 @@ import React from 'react';
 import { useGardenStore } from '../store/store';
 import { allVegetables } from '~/utils/constants';
 import { monthNames } from '../utils/constants';
-import type { Route } from '../+types/root';
 import { calculateYield } from '../utils/calculate-yield';
 import { formatDate } from '../utils/format-date';
 import { calculateTimeToHarvest } from '~/utils/calculate-time-to-harvest';
 
-export async function loader({ _params }: Route.LoaderArgs) {
+export async function loader() {
 	return {};
 }
 

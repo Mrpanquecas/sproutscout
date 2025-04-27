@@ -110,7 +110,7 @@ export default function guide() {
 									<p>
 										<span className="text-gray-500">Best Planting Months:</span>{' '}
 										{veggie.bestPlantingMonths
-											.map((m) => monthNames[m - 1].slice(0, 3))
+											.map((m) => monthNames[m - 1]?.slice(0, 3))
 											.join(', ')}
 									</p>
 									<p>
