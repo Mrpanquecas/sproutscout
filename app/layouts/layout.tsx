@@ -1,9 +1,60 @@
 import React, { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router';
+import { createCookie, Outlet, redirect, useNavigate } from 'react-router';
 import { useLocation } from 'react-router';
 
 import { type ClimateTypes, monthNames, climateZones } from '~/utils/constants';
 import { useGardenStore } from '../store/store';
+import type { Route } from './+types/layout';
+import { accessTokenCookie, refreshTokenCookie } from '~/utils/cookie-util';
+
+const authAnonUser = async (): Promise<void> => {
+	try {
+		const resp = await fetch(
+			`https://tometrics-api.onrender.com/api/v1/auth/anon/register`,
+			{
+				method: 'POST',
+			}
+		);
+
+		if (resp.ok) {
+			const data = await resp.json();
+			return {
+				accessToken: data.access,
+				refreshToken: data.refresh,
+			};
+		}
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+export async function loader({ request }: Route.LoaderArgs) {
+	const cookieList = request.headers.get('Cookie');
+	const hasAuthCookies =
+		cookieList &&
+		cookieList.includes('access-token') &&
+		cookieList.includes('refresh-token');
+
+	if (hasAuthCookies) return {};
+
+	const tokens = await authAnonUser();
+
+	const headers = new Headers();
+	headers.append(
+		'Set-Cookie',
+		`access-token=${tokens.accessToken}; Path=/; Max-Age=3600; SameSite=Lax`
+	);
+	headers.append(
+		'Set-Cookie',
+		`refresh-token=${tokens.refreshToken}; Path=/; Max-Age=${
+			30 * 24 * 3600
+		}; SameSite=Lax`
+	);
+
+	return redirect(request.url, {
+		headers,
+	});
+}
 
 export default function PageLayout() {
 	const { climateZone, setClimateZone } = useGardenStore();

@@ -5,9 +5,38 @@ import { useState } from 'react';
 import { isInSeason } from '../utils/in-season';
 import { formatDate } from '../utils/format-date';
 import { calculateYield } from '../utils/calculate-yield';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLoaderData } from 'react-router';
+import type { Route } from './+types/guide';
+import { accessTokenCookie, getCookieValue } from '~/utils/cookie-util';
+
+export async function loader({ request }: Route.LoaderArgs) {
+	let plants = {};
+	const cookieList = request.headers.get('Cookie');
+	const accessToken = getCookieValue(cookieList, 'access-token');
+	try {
+		const resp = await fetch(
+			`https://tometrics-api.onrender.com/api/v1/plant/all`,
+			{
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			}
+		);
+
+		if (resp.ok) {
+			const data = await resp.json();
+			plants = data.plants;
+		}
+		console.log(resp);
+	} catch (error) {
+		console.log(error);
+	}
+	return { plants };
+}
 
 export default function guide() {
+	const data = useLoaderData();
 	const navigate = useNavigate();
 
 	const {
@@ -19,7 +48,7 @@ export default function guide() {
 	} = useGardenStore();
 	const [showOnlyInSeason, setShowOnlyInSeason] = useState(false);
 
-	const vegetables = allVegetables.map((veggie) => ({
+	const vegetables = data.plants.map((veggie) => ({
 		...veggie,
 		bestPlantingMonths: veggie.climateZones[climateZone] || [],
 	}));
@@ -37,7 +66,7 @@ export default function guide() {
 			plantDate: formatDate(today),
 			harvestDate: formatDate(harvestDate),
 			area: `${plantArea} m²`,
-			yieldPerPlant: veggie.yieldPerPlant,
+			yieldPerPlant: `${veggie.yieldPerPlant.from} - ${veggie.yieldPerPlant.to}`,
 			estimatedYield: calculateYield(veggie, plantArea),
 		};
 
@@ -101,11 +130,14 @@ export default function guide() {
 									</p>
 									<p>
 										<span className="text-gray-500">Yield per Plant:</span>{' '}
-										{veggie.yieldPerPlant}
+										{veggie.yieldPerPlant.from}
+										{veggie.yieldPerPlant.unit} - {veggie.yieldPerPlant.to}
+										{veggie.yieldPerPlant.unit}
 									</p>
 									<p>
 										<span className="text-gray-500">Yield per Area:</span>{' '}
-										{veggie.yieldPerSqM}
+										{veggie.yieldPerSqM.from} {veggie.yieldPerSqM.unit} -{' '}
+										{veggie.yieldPerSqM.to} {veggie.yieldPerSqM.unit}
 									</p>
 									<p>
 										<span className="text-gray-500">Best Planting Months:</span>{' '}
