@@ -1,7 +1,6 @@
 import React from 'react';
 import type { Route } from './+types/vegetable-details';
 import {
-	allVegetables,
 	growingTipDescriptions,
 	monthNames,
 	plantGrowthHabitDescriptions,
@@ -12,15 +11,14 @@ import {
 } from '~/utils/constants';
 import { useLoaderData, useNavigate } from 'react-router';
 import { useGardenStore } from '~/store/store';
+import { getVegetableDetails } from '~/utils/loader-helpers';
+import { formatYield } from '~/utils/format-yield';
 
-export function loader({ params }: Route.LoaderArgs) {
-	if (!params.vegetable_id) return;
+export async function loader({ params, request }: Route.LoaderArgs) {
+	const vegetable = await getVegetableDetails(request, params.vegetable_id);
 
-	const selectedVegetable = allVegetables.find(
-		(veg) => veg.id === Number(params.vegetable_id)
-	);
-
-	return { selectedVegetable };
+	console.log(vegetable);
+	return { vegetable };
 }
 
 export default function VegetableDetails() {
@@ -30,9 +28,8 @@ export default function VegetableDetails() {
 	const navigate = useNavigate();
 
 	const veggie = {
-		...data?.selectedVegetable,
-		bestPlantingMonths:
-			data?.selectedVegetable?.climateZones[climateZone] || [],
+		...data?.vegetable,
+		bestPlantingMonths: data?.vegetable?.climateZones[climateZone] || [],
 	};
 
 	if (!veggie) return <></>;
@@ -87,12 +84,12 @@ export default function VegetableDetails() {
 					</h3>
 					<ul className="space-y-2">
 						<li className="text-gray-700">
-							<span className="font-medium">Yield per Plant:</span>{' '}
-							{veggie.yieldPerPlant}
+							<span className="font-medium">Yield per Plant: </span>
+							{formatYield(veggie.yieldPerPlant)}
 						</li>
 						<li className="text-gray-700">
-							<span className="font-medium">Yield per Area:</span>{' '}
-							{veggie.yieldPerSqM}
+							<span className="font-medium">Yield per Area: </span>
+							{formatYield(veggie.yieldPerSqM)}
 						</li>
 						<li className="text-gray-700">
 							<span className="font-medium">Days to Harvest:</span>{' '}

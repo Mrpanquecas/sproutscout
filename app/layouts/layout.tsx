@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { createCookie, Outlet, redirect, useNavigate } from 'react-router';
+import { Outlet, redirect, useNavigate } from 'react-router';
 import { useLocation } from 'react-router';
 
 import { type ClimateTypes, monthNames, climateZones } from '~/utils/constants';
 import { useGardenStore } from '../store/store';
 import type { Route } from './+types/layout';
-import { accessTokenCookie, refreshTokenCookie } from '~/utils/cookie-util';
 
-const authAnonUser = async (): Promise<void> => {
+type AuthResponse = {
+	accessToken: string;
+	refreshToken: string;
+};
+
+const authAnonUser = async (): Promise<AuthResponse | undefined> => {
 	try {
 		const resp = await fetch(
 			`https://tometrics-api.onrender.com/api/v1/auth/anon/register`,
@@ -38,6 +42,8 @@ export async function loader({ request }: Route.LoaderArgs) {
 	if (hasAuthCookies) return {};
 
 	const tokens = await authAnonUser();
+
+	if (!tokens) return {};
 
 	const headers = new Headers();
 	headers.append(

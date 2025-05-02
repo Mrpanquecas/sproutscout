@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useGardenStore } from '~/store/store';
-import {
-	allVegetables,
-	type EditingNoteCell,
-	type VegetableInfo,
-} from '~/utils/constants';
+import { type EditingNoteCell, type VegetableInfo } from '~/utils/constants';
 import { formatDate } from '../utils/format-date';
-import { calculateYield } from '../utils/calculate-yield';
 import { isInSeason } from '../utils/in-season';
 import { getSpacingRecommendation } from '../utils/space-recommendation';
+import { getVegetables } from '~/utils/loader-helpers';
+import type { Route } from './+types/garden-layout';
+import { useLoaderData } from 'react-router';
+
+export async function loader({ request }: Route.LoaderArgs) {
+	const plants = await getVegetables(request);
+	return { plants };
+}
 
 export default function layout() {
+	const data = useLoaderData();
+
 	const {
 		setPlantedPlants,
 		climateZone,
@@ -48,7 +53,7 @@ export default function layout() {
 		setGardenLayout(newLayout);
 	};
 
-	const vegetables = allVegetables.map((veggie) => ({
+	const vegetables = data.plants?.map((veggie) => ({
 		...veggie,
 		bestPlantingMonths: veggie.climateZones[climateZone] || [],
 	}));
@@ -125,7 +130,6 @@ export default function layout() {
 			harvestDate: formatDate(harvestDate),
 			area: `${plantArea} m²`,
 			yieldPerPlant: veggie.yieldPerPlant,
-			estimatedYield: calculateYield(veggie, plantArea),
 		};
 
 		setPlantedPlants([...plantedPlants, newPlanting]);

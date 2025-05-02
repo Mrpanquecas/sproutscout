@@ -1,18 +1,21 @@
 import React from 'react';
 import { useGardenStore } from '../store/store';
-import { allVegetables, climateZones, monthNames } from '~/utils/constants';
+import { climateZones, monthNames, type Vegetable } from '~/utils/constants';
 import { useLoaderData } from 'react-router';
 import { getHarvestMonth } from '~/utils/get-harvest-month';
+import type { Route } from './+types/calendar';
+import { getVegetables } from '~/utils/loader-helpers';
 
-export function loader() {
-	return { allVegetables };
+export async function loader({ request }: Route.LoaderArgs) {
+	const plants = await getVegetables(request);
+	return { plants };
 }
 
 export default function calendar() {
 	const data = useLoaderData<typeof loader>();
 	const { climateZone } = useGardenStore();
 
-	const vegetables = data.allVegetables.map((veggie) => ({
+	const vegetables = data.plants?.map((veggie) => ({
 		...veggie,
 		bestPlantingMonths: veggie.climateZones[climateZone] || [],
 	}));
@@ -45,7 +48,7 @@ export default function calendar() {
 						</tr>
 					</thead>
 					<tbody>
-						{vegetables.map((veggie) => (
+						{vegetables?.map((veggie) => (
 							<tr key={veggie.id} className="hover:bg-gray-50">
 								<td className="py-2 px-4 border-b border-gray-200 text-sm font-medium">
 									{veggie.name}
