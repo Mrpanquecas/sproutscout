@@ -93,8 +93,8 @@ export default function guide() {
 						(veggie) => !showOnlyInSeason || isInSeason(veggie, currentMonth)
 					)
 					.map((veggie) => {
-						const gardenHasVeggiePlanted: boolean = data.garden.plantings.some(
-							(plant) => plant.id === veggie.id
+						const gardenHasVeggiePlanted: boolean = data.garden?.plantings.some(
+							(plant) => plant.plant.id === veggie.id
 						);
 						return (
 							<Form key={veggie.id} method="POST" className="flex">
