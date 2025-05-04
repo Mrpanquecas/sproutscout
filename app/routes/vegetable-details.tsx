@@ -8,39 +8,37 @@ import {
 	spacingRequirementDescriptions,
 	sunlightRequirementDescriptions,
 	waterRequirementDescriptions,
+	type Vegetable,
 } from '~/utils/constants';
 import { useLoaderData, useNavigate } from 'react-router';
-import { useGardenStore } from '~/store/store';
 import { getVegetableDetails } from '~/utils/loader-helpers';
 import { formatYield } from '~/utils/format-yield';
 
 export async function loader({ params, request }: Route.LoaderArgs) {
-	const vegetable = await getVegetableDetails(request, params.vegetable_id);
+	const vegetable: Vegetable = await getVegetableDetails(
+		request,
+		params.vegetable_id
+	);
 
-	console.log(vegetable);
 	return { vegetable };
 }
 
 export default function VegetableDetails() {
 	const data = useLoaderData<typeof loader>();
 
-	const { climateZone } = useGardenStore();
 	const navigate = useNavigate();
 
-	const veggie = {
-		...data?.vegetable,
-		bestPlantingMonths: data?.vegetable?.climateZones[climateZone] || [],
-	};
-
-	if (!veggie) return <></>;
+	if (!data.vegetable) return <></>;
 	return (
 		<div className="bg-white rounded-lg shadow-md p-6">
 			<div className="flex justify-between items-start mb-6">
 				<div>
-					<h2 className="text-2xl font-bold text-green-700">{veggie.name}</h2>
+					<h2 className="text-2xl font-bold text-green-700">
+						{data.vegetable.name}
+					</h2>
 				</div>
 				<div className="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">
-					Harvest in {veggie.timeToHarvest} days
+					Harvest in {data.vegetable.timeToHarvest} days
 				</div>
 			</div>
 
@@ -49,7 +47,7 @@ export default function VegetableDetails() {
 					Description
 				</h3>
 				<p className="text-sm text-gray-600">
-					{plantGrowthHabitDescriptions[veggie.growthHabit]}
+					{plantGrowthHabitDescriptions[data.vegetable.growthHabit]}
 				</p>
 			</div>
 
@@ -61,19 +59,21 @@ export default function VegetableDetails() {
 					<ul className="space-y-2">
 						<li className="text-gray-700">
 							<span className="font-medium">Spacing:</span>{' '}
-							{spacingRequirementDescriptions[veggie.spacing]}
+							{spacingRequirementDescriptions[data.vegetable.spacing]}
 						</li>
 						<li className="text-gray-700">
 							<span className="font-medium">Sunlight:</span>{' '}
-							{sunlightRequirementDescriptions[veggie.sunlight]}
+							{sunlightRequirementDescriptions[data.vegetable.sunlight]}
 						</li>
 						<li className="text-gray-700">
 							<span className="font-medium">Soil:</span>{' '}
-							{soilTypeDescriptions[veggie.soilType]}
+							{data.vegetable.soilType.map(
+								(soil) => soilTypeDescriptions[soil]
+							)}
 						</li>
 						<li className="text-gray-700">
 							<span className="font-medium">Water:</span>{' '}
-							{waterRequirementDescriptions[veggie.waterRequirement]}
+							{waterRequirementDescriptions[data.vegetable.waterRequirement]}
 						</li>
 					</ul>
 				</div>
@@ -85,19 +85,19 @@ export default function VegetableDetails() {
 					<ul className="space-y-2">
 						<li className="text-gray-700">
 							<span className="font-medium">Yield per Plant: </span>
-							{formatYield(veggie.yieldPerPlant)}
+							{formatYield(data.vegetable.yieldPerPlant)}
 						</li>
 						<li className="text-gray-700">
 							<span className="font-medium">Yield per Area: </span>
-							{formatYield(veggie.yieldPerSqM)}
+							{formatYield(data.vegetable.yieldPerSqM)}
 						</li>
 						<li className="text-gray-700">
 							<span className="font-medium">Days to Harvest:</span>{' '}
-							{veggie.timeToHarvest}
+							{data.vegetable.timeToHarvest}
 						</li>
 						<li className="text-gray-700">
 							<span className="font-medium">Best Months:</span>{' '}
-							{veggie.bestPlantingMonths
+							{data.vegetable.bestPlantingMonths
 								?.map((m) => monthNames[m - 1]?.slice(0, 3))
 								.join(', ')}
 						</li>
@@ -110,7 +110,7 @@ export default function VegetableDetails() {
 					Companion Plants
 				</h3>
 				<div className="flex flex-wrap gap-2">
-					{veggie.companionPlants.map((plant, index) => (
+					{data.vegetable.companionPlants.map((plant, index) => (
 						<span
 							key={index}
 							className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
@@ -126,7 +126,7 @@ export default function VegetableDetails() {
 					Growing Tips
 				</h3>
 				<ul className="list-disc pl-5 space-y-1">
-					{veggie.growingTips?.map((tip, index) => (
+					{data.vegetable.growingTips?.map((tip, index) => (
 						<li key={index} className="text-gray-700">
 							{growingTipDescriptions[tip]}
 						</li>
@@ -177,7 +177,7 @@ export default function VegetableDetails() {
 				</button>
 				<button
 					onClick={() => {
-						addVegetable(veggie);
+						//addVegetable(data.vegetable);
 					}}
 					className="px-4 py-2 bg-green-600 text-white rounded"
 				>

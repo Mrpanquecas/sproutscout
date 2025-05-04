@@ -57,23 +57,10 @@ export type ClimateTypes =
 	| 'tropical'
 	| 'arid';
 
-export type VegetableInfo = {
-	id: number;
-	name: string;
-	timeToHarvest: number;
-	yieldPerPlant: string;
-	yieldPerSqM: string;
-	companionPlants: string[];
-	climateZones: {
-		[key in ClimateTypes]: number[];
-	};
-	bestPlantingMonths?: number[];
-};
-
 export type GardenCell = {
 	x: number;
 	y: number;
-	veggie: VegetableInfo | null;
+	veggie: Vegetable | null;
 };
 
 export type GardenSize = {
@@ -90,11 +77,11 @@ export type GardenLayout = GardenCell[][];
 
 // TypeScript enum definitions for vegetable growing requirements
 enum SpacingRequirement {
-	VERY_CLOSE = 'very_close', // 5-15 cm
-	CLOSE = 'close', // 15-30 cm
-	MODERATE = 'moderate', // 30-60 cm
-	WIDE = 'wide', // 60-90 cm
-	VERY_WIDE = 'very_wide', // 90+ cm
+	VERY_CLOSE = 'VERY_CLOSE', // 5-15 cm
+	CLOSE = 'CLOSE', // 15-30 cm
+	MODERATE = 'MODERATE', // 30-60 cm
+	WIDE = 'WIDE', // 60-90 cm
+	VERY_WIDE = 'VERY_WIDE', // 90+ cm
 }
 
 enum Units {
@@ -103,10 +90,10 @@ enum Units {
 }
 
 enum SunlightRequirement {
-	FULL_SUN = 'full_sun',
-	PARTIAL_SUN = 'partial_sun',
-	PARTIAL_SHADE = 'partial_shade',
-	FULL_SHADE = 'full_shade',
+	FULL_SUN = 'FULL_SUN',
+	PARTIAL_SUN = 'PARTIAL_SUN',
+	PARTIAL_SHADE = 'PARTIAL_SHADE',
+	FULL_SHADE = 'FULL_SHADE',
 }
 
 enum DailySunlightRequirement {
@@ -116,30 +103,30 @@ enum DailySunlightRequirement {
 }
 
 enum SoilType {
-	SANDY = 'sandy',
-	LOAMY = 'loamy',
-	CLAY = 'clay',
-	PEATY = 'peaty',
-	CHALKY = 'chalky',
-	SILTY = 'silty',
+	SANDY = 'SANDY',
+	LOAMY = 'LOAMY',
+	CLAY = 'CLAY',
+	PEATY = 'PEATY',
+	CHALKY = 'CHALKY',
+	SILTY = 'SILTY',
 }
 
 enum WaterRequirement {
-	LOW = 'low', // Drought-tolerant, infrequent watering
-	MEDIUM = 'medium', // Regular watering, moist but not wet
-	HIGH = 'high', // Consistently moist, frequent watering
+	LOW = 'LOW', // Drought-tolerant, infrequent watering
+	MEDIUM = 'MEDIUM', // Regular watering, moist but not wet
+	HIGH = 'HIGH', // Consistently moist, frequent watering
 }
 
 enum PlantGrowthHabit {
-	DETERMINATE = 'determinate', // Bush-type that grows to a certain height and stops
-	INDETERMINATE = 'indeterminate', // Vining type that continues growing
-	BUSH = 'bush', // Compact growing habit
-	VINING = 'vining', // Climbing or sprawling habit
-	UPRIGHT = 'upright', // Grows straight up with minimal spread
-	ROSETTE = 'rosette', // Grows in a circular pattern from center
-	CLUMPING = 'clumping', // Forms clumps or clusters
-	SPREADING = 'spreading', // Spreads horizontally
-	MOUNDING = 'mounding', // Forms a mound shape
+	DETERMINATE = 'DETERMINATE', // Bush-type that grows to a certain height and stops
+	INDETERMINATE = 'INDETERMINATE', // Vining type that continues growing
+	BUSH = 'BUSH', // Compact growing habit
+	VINING = 'VINING', // Climbing or sprawling habit
+	UPRIGHT = 'UPRIGHT', // Grows straight up with minimal spread
+	ROSETTE = 'ROSETTE', // Grows in a circular pattern from center
+	CLUMPING = 'CLUMPING', // Forms clumps or clusters
+	SPREADING = 'SPREADING', // Spreads horizontally
+	MOUNDING = 'MOUNDING', // Forms a mound shape
 }
 
 enum GrowingTip {
@@ -191,7 +178,6 @@ enum GrowingTip {
 	PERENNIAL_CROP = 'PERENNIAL_CROP',
 	HARVEST_SELECTIVELY = 'HARVEST_SELECTIVELY',
 	DROUGHT_RESISTANT = 'DROUGHT_RESISTANT',
-	AVOID_TRANSPLANTING = 'AVOID_TRANSPLANTING',
 	COMPANION_BENEFICIAL = 'COMPANION_BENEFICIAL',
 	SHADE_TOLERANT = 'SHADE_TOLERANT',
 	EARLY_SPRING_CROP = 'EARLY_SPRING_CROP',
@@ -205,7 +191,6 @@ enum GrowingTip {
 	SLOW_TO_GERMINATE = 'SLOW_TO_GERMINATE',
 	SOAK_SEEDS = 'SOAK_SEEDS',
 	PINCH_GROWING_TIPS = 'PINCH_GROWING_TIPS',
-	STRATIFICATION = 'STRATIFICATION',
 	START_INDOORS = 'START_INDOORS',
 	LOOSE_SOIL = 'LOOSE_SOIL',
 	HARVEST_WHEN_SMALL = 'HARVEST_WHEN_SMALL',
@@ -216,7 +201,6 @@ enum GrowingTip {
 	DIVIDE_EVERY_FEW_YEARS = 'DIVIDE_EVERY_FEW_YEARS',
 	DIVIDE_BULBS = 'DIVIDE_BULBS',
 	NEEDS_CONSTANT_MOISTURE = 'NEEDS_CONSTANT_MOISTURE',
-	AQUATIC_FRIENDLY = 'AQUATIC_FRIENDLY',
 	HARVEST_AFTER_FROST = 'HARVEST_AFTER_FROST',
 	CONTAIN_SPREAD = 'CONTAIN_SPREAD',
 	NEEDS_SPACE = 'NEEDS_SPACE',
@@ -235,53 +219,6 @@ enum GrowingTip {
 	PREVENT_FLOWERING = 'PREVENT_FLOWERING',
 	ACIDIC_FLAVOR = 'ACIDIC_FLAVOR',
 	CELERY_FLAVOR = 'CELERY_FLAVOR',
-	SIMILAR_TO_ARTICHOKE = 'SIMILAR_TO_ARTICHOKE',
-	INVASIVE_TENDENCIES = 'INVASIVE_TENDENCIES',
-	PEST_RESISTANT = 'PEST_RESISTANT',
-	COLORFUL_TUBERS = 'COLORFUL_TUBERS',
-	PLANT_WHOLE_FRUIT = 'PLANT_WHOLE_FRUIT',
-	PERENNIAL_IN_TROPICS = 'PERENNIAL_IN_TROPICS',
-	MEDICINAL_PROPERTIES = 'MEDICINAL_PROPERTIES',
-	EDIBLE_WHEN_YOUNG = 'EDIBLE_WHEN_YOUNG',
-	DRY_FOR_SPONGES = 'DRY_FOR_SPONGES',
-	ALL_PARTS_EDIBLE = 'ALL_PARTS_EDIBLE',
-	NUTRITIOUS_LEAVES = 'NUTRITIOUS_LEAVES',
-	TREE_VEGETABLE = 'TREE_VEGETABLE',
-	PLANT_MULTIPLES = 'PLANT_MULTIPLES',
-	HARVEST_WHEN_HUSKS_SPLIT = 'HARVEST_WHEN_HUSKS_SPLIT',
-	REMOVE_HUSKS_BEFORE_USE = 'REMOVE_HUSKS_BEFORE_USE',
-	SAPONIN_REMOVAL = 'SAPONIN_REMOVAL',
-	EDIBLE_LEAVES = 'EDIBLE_LEAVES',
-	GRAIN_AND_LEAF_CROP = 'GRAIN_AND_LEAF_CROP',
-	QUICK_GROWING = 'QUICK_GROWING',
-	EXCELLENT_COVER_CROP = 'EXCELLENT_COVER_CROP',
-	ATTRACTS_POLLINATORS = 'ATTRACTS_POLLINATORS',
-	IMPROVES_SOIL = 'IMPROVES_SOIL',
-	SEED_CLEANING_REQUIRED = 'SEED_CLEANING_REQUIRED',
-	BIRD_PROTECTION_NEEDED = 'BIRD_PROTECTION_NEEDED',
-	OIL_AND_FIBER_CROP = 'OIL_AND_FIBER_CROP',
-	HARVEST_FOR_SEEDS = 'HARVEST_FOR_SEEDS',
-	FORCED_FOR_CHICONS = 'FORCED_FOR_CHICONS',
-	COFFEE_SUBSTITUTE = 'COFFEE_SUBSTITUTE',
-	BITTER_FLAVOR = 'BITTER_FLAVOR',
-	MULTIPLE_ROOTS = 'MULTIPLE_ROOTS',
-	SWEET_FLAVOR = 'SWEET_FLAVOR',
-	MULTI_USE_PLANT = 'MULTI_USE_PLANT',
-	SPINACH_SUBSTITUTE = 'SPINACH_SUBSTITUTE',
-	SLOW_TO_ESTABLISH = 'SLOW_TO_ESTABLISH',
-	COASTAL_NATIVE = 'COASTAL_NATIVE',
-	SALT_TOLERANT = 'SALT_TOLERANT',
-	HARVEST_STEMS_AND_LEAVES = 'HARVEST_STEMS_AND_LEAVES',
-	HEAT_TOLERANT_BRASSICA = 'HEAT_TOLERANT_BRASSICA',
-	EDIBLE_FLOWERS = 'EDIBLE_FLOWERS',
-	PEST_DETERRENT = 'PEST_DETERRENT',
-	COLORFUL_LEAVES = 'COLORFUL_LEAVES',
-	SELF_SEEDING = 'SELF_SEEDING',
-	HUMIDITY_TOLERANT = 'HUMIDITY_TOLERANT',
-	MUCILAGINOUS_TEXTURE = 'MUCILAGINOUS_TEXTURE',
-	FAST_GROWING = 'FAST_GROWING',
-	SHORT_DAY_TUBER_FORMATION = 'SHORT_DAY_TUBER_FORMATION',
-	BIRD_PROTECTION = 'BIRD_PROTECTION',
 }
 
 export type Vegetable = {
@@ -317,8 +254,8 @@ export type PlantYield = {
 export type GardenEntry = {
 	id: string;
 	plant: Vegetable;
-	totalYield: PlantYield;
 	createdAt: number;
+	totalYield: PlantYield;
 };
 
 export type Garden = {

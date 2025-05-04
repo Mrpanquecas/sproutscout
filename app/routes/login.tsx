@@ -61,7 +61,7 @@ export default function Login() {
 			></div>
 
 			<div
-				class="g_id_signin"
+				className="g_id_signin"
 				data-type="standard"
 				data-shape="rectangular"
 				data-theme="outline"

@@ -1,10 +1,11 @@
 import React from 'react';
 import { useGardenStore } from '../store/store';
-import { climateZones, monthNames, type Vegetable } from '~/utils/constants';
+import { climateZones, monthNames } from '~/utils/constants';
 import { useLoaderData } from 'react-router';
 import { getHarvestMonth } from '~/utils/get-harvest-month';
 import type { Route } from './+types/calendar';
 import { getVegetables } from '~/utils/loader-helpers';
+import { isInSeason } from '~/utils/in-season';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const plants = await getVegetables(request);
@@ -14,11 +15,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 export default function calendar() {
 	const data = useLoaderData<typeof loader>();
 	const { climateZone } = useGardenStore();
-
-	const vegetables = data.plants?.map((veggie) => ({
-		...veggie,
-		bestPlantingMonths: veggie.climateZones[climateZone] || [],
-	}));
 
 	return (
 		<div>
@@ -48,17 +44,19 @@ export default function calendar() {
 						</tr>
 					</thead>
 					<tbody>
-						{vegetables?.map((veggie) => (
+						{data.plants?.map((veggie) => (
 							<tr key={veggie.id} className="hover:bg-gray-50">
 								<td className="py-2 px-4 border-b border-gray-200 text-sm font-medium">
 									{veggie.name}
 								</td>
 								{monthNames.map((month, index) => {
-									const isPlantingMonth = veggie.bestPlantingMonths.includes(
-										index + 1
+									const isPlantingMonth = isInSeason(
+										veggie,
+										index + 1,
+										climateZone
 									);
 
-									const harvestMonth = getHarvestMonth(veggie);
+									const harvestMonth = getHarvestMonth(veggie, climateZone);
 									const isHarvestMonth = harvestMonth.includes(index + 1);
 
 									return (

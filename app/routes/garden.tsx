@@ -8,6 +8,7 @@ import { useLoaderData } from 'react-router';
 import { formatYield } from '~/utils/format-yield';
 import { formatDate } from '../utils/format-date';
 import { calculateTimeToHarvest } from '~/utils/calculate-time-to-harvest';
+import { Helmet } from 'react-helmet';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const gardenRequest = await getGarden(request);
@@ -18,12 +19,15 @@ export default function garden() {
 	const data = useLoaderData<typeof loader>();
 	const { currentMonth } = useGardenStore();
 
-	const removePlant = (id: number) => {
-		//setPlantedPlants(plantedPlants.filter((p) => p.id !== id));
-	};
+	/* 	const removePlant = (id: number) => {
+	}; */
 
 	return (
 		<div>
+			<Helmet>
+				<title>Create your own garden!</title>
+				<meta content="Tometrics allows you to create your own garden and check for current in season vegetables to be planted" />
+			</Helmet>
 			<div className="flex justify-between items-center mb-4">
 				<div className="text-lg">Current Month: {monthNames[currentMonth]}</div>
 			</div>
@@ -46,7 +50,7 @@ export default function garden() {
 										{plant.name}
 									</h3>
 									<button
-										onClick={() => removePlant(plant.id)}
+										onClick={() => {}}
 										className="px-2 py-1 rounded bg-red-100 text-red-700"
 									>
 										Remove
@@ -64,13 +68,13 @@ export default function garden() {
 									</div>
 									<div>
 										<span className="text-gray-500">Per Plant:</span>{' '}
-										{formatYield(totalYield)}
+										{formatYield(plant.yieldPerPlant)}
 									</div>
 									<div className="col-span-2">
 										<span className="text-gray-500">
 											Total Estimated Yield:
 										</span>{' '}
-										{plant.estimatedYield}
+										{formatYield(totalYield)}
 									</div>
 									<div className="col-span-2">
 										<span className="text-gray-500">Companion Plants:</span>{' '}

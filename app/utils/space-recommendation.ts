@@ -1,13 +1,13 @@
-import type { VegetableInfo } from './constants';
+import type { Vegetable } from './constants';
 
 /**
  * @date 2025-04-20
  * @description Returns basic spacing recommendation for each vegetable
- * @param {any} veggie:VegetableInfo
+ * @param {any} veggie:Vegetable
  * @returns {any} spacing: string
  */
 
-export const getSpacingRecommendation = (veggie: VegetableInfo): string => {
+export const getSpacingRecommendation = (veggie: Vegetable): string => {
 	const spacingGuide: Record<string, string> = {
 		Tomatoes: '60-90 cm',
 		Carrots: '5-10 cm',

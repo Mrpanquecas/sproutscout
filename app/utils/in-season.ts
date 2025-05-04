@@ -1,5 +1,9 @@
-import type { VegetableInfo } from './constants';
+import type { ClimateTypes, Vegetable } from './constants';
 
-export const isInSeason = (veggie: VegetableInfo, currentMonth: number) => {
-	return veggie.bestPlantingMonths.includes(currentMonth + 1);
+export const isInSeason = (
+	veggie: Vegetable,
+	currentMonth: number,
+	climateZone: ClimateTypes
+) => {
+	return veggie.climateZones[climateZone].includes(currentMonth + 1);
 };

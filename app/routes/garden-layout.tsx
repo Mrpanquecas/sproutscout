@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useGardenStore } from '~/store/store';
-import { type EditingNoteCell, type VegetableInfo } from '~/utils/constants';
+import { type EditingNoteCell, type Vegetable } from '~/utils/constants';
 import { formatDate } from '../utils/format-date';
 import { isInSeason } from '../utils/in-season';
 import { getSpacingRecommendation } from '../utils/space-recommendation';
@@ -14,7 +14,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function layout() {
-	const data = useLoaderData();
+	const data = useLoaderData<typeof loader>();
 
 	const {
 		setPlantedPlants,
@@ -31,9 +31,7 @@ export default function layout() {
 	} = useGardenStore();
 	const [isHydrated, setIsHydrated] = useState<boolean>(false);
 	const [showOnlyInSeason, setShowOnlyInSeason] = useState(false);
-	const [selectedVeggie, setSelectedVeggie] = useState<VegetableInfo | null>(
-		null
-	);
+	const [selectedVeggie, setSelectedVeggie] = useState<Vegetable | null>(null);
 	const [currentNote, setCurrentNote] = useState('');
 	const [editingNoteCell, setEditingNoteCell] =
 		useState<EditingNoteCell | null>(null);
@@ -52,11 +50,6 @@ export default function layout() {
 		}
 		setGardenLayout(newLayout);
 	};
-
-	const vegetables = data.plants?.map((veggie) => ({
-		...veggie,
-		bestPlantingMonths: veggie.climateZones[climateZone] || [],
-	}));
 
 	// Calculate total space used by each vegetable type
 	const calculateGardenUsage = () => {
@@ -117,7 +110,7 @@ export default function layout() {
 	};
 
 	const addSpecificVeggie = (id: number) => {
-		const veggie = vegetables.find((v) => v.id === id);
+		const veggie = data.plants?.find((v) => v.id === id);
 		if (!veggie) return;
 
 		const today = new Date();
@@ -249,10 +242,11 @@ export default function layout() {
 									Remove plants from cells
 								</div>
 							</div>
-							{vegetables
-								.filter(
+							{data.plants
+								?.filter(
 									(veggie) =>
-										!showOnlyInSeason || isInSeason(veggie, currentMonth)
+										!showOnlyInSeason ||
+										isInSeason(veggie, currentMonth, climateZone)
 								)
 								.map((veggie) => (
 									<div
@@ -266,7 +260,7 @@ export default function layout() {
 									>
 										<div className="flex justify-between">
 											<div className="text-sm font-medium">{veggie.name}</div>
-											{isInSeason(veggie, currentMonth) && (
+											{isInSeason(veggie, currentMonth, climateZone) && (
 												<span className="bg-green-100 text-green-800 text-xs px-1 rounded-full">
 													In Season
 												</span>
@@ -313,8 +307,6 @@ export default function layout() {
 							<div className="text-xs text-gray-500">
 								{selectedVeggie
 									? `Selected: ${selectedVeggie.name}`
-									: editingNoteCell
-									? 'Adding note...'
 									: 'Click a cell to place selected vegetable'}
 							</div>
 						</div>
