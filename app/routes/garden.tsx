@@ -2,7 +2,7 @@ import React from 'react';
 import { monthNames } from '../utils/constants';
 import type { Route } from './+types/garden';
 import { getGarden } from '~/utils/loader-helpers';
-import { Form, useLoaderData, useNavigation } from 'react-router';
+import { Form, useLoaderData, useNavigate, useNavigation } from 'react-router';
 import { formatYield } from '~/utils/format-yield';
 import { formatDate } from '../utils/format-date';
 import { calculateTimeToHarvest } from '~/utils/calculate-time-to-harvest';
@@ -31,6 +31,7 @@ export async function action({ request }: Route.ActionArgs) {
 export default function garden() {
 	const data = useLoaderData<typeof loader>();
 	const navigation = useNavigation();
+	const navigate = useNavigate();
 
 	const isLoading =
 		navigation.state === 'loading' || navigation.state === 'submitting';
@@ -95,6 +96,14 @@ export default function garden() {
 													Remove
 												</button>
 											</Form>
+											<button
+												disabled={isLoading}
+												onClick={() => navigate(`/vegetable/${plant.id}`)}
+												type="button"
+												className="bg-cyan-600 text-white px-3 py-1 rounded text-sm"
+											>
+												See details
+											</button>
 										</div>
 									</div>
 									<div className="mt-2 flex flex-col gap-2">

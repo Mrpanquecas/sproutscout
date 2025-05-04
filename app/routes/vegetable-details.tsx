@@ -10,9 +10,17 @@ import {
 	waterRequirementDescriptions,
 	type Vegetable,
 } from '~/utils/constants';
-import { useLoaderData, useNavigate } from 'react-router';
+import {
+	Form,
+	redirect,
+	useLoaderData,
+	useNavigate,
+	useNavigation,
+} from 'react-router';
 import { getVegetableDetails } from '~/utils/loader-helpers';
 import { formatYield } from '~/utils/format-yield';
+import { addPlanting } from '~/utils/action-helpers';
+import { useGardenStore } from '~/store/store';
 
 export async function loader({ params, request }: Route.LoaderArgs) {
 	const vegetable: Vegetable = await getVegetableDetails(
@@ -23,10 +31,24 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 	return { vegetable };
 }
 
+export async function action({ request }: Route.ActionArgs) {
+	try {
+		await addPlanting(request);
+		return redirect('/');
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 export default function VegetableDetails() {
+	const { climateZone } = useGardenStore();
 	const data = useLoaderData<typeof loader>();
 
 	const navigate = useNavigate();
+	const navigation = useNavigation();
+
+	const isLoading =
+		navigation.state === 'loading' || navigation.state === 'submitting';
 
 	if (!data.vegetable) return <></>;
 	return (
@@ -97,8 +119,8 @@ export default function VegetableDetails() {
 						</li>
 						<li className="text-gray-700">
 							<span className="font-medium">Best Months:</span>{' '}
-							{data.vegetable.bestPlantingMonths
-								?.map((m) => monthNames[m - 1]?.slice(0, 3))
+							{data.vegetable.climateZones[climateZone]
+								.map((m) => monthNames[m - 1]?.slice(0, 3))
 								.join(', ')}
 						</li>
 					</ul>
@@ -175,14 +197,23 @@ export default function VegetableDetails() {
 				>
 					Back
 				</button>
-				<button
-					onClick={() => {
-						//addVegetable(data.vegetable);
-					}}
-					className="px-4 py-2 bg-green-600 text-white rounded"
-				>
-					Add to My Garden
-				</button>
+				<Form className="flex gap-2" method="POST">
+					<input type="hidden" name="id" value={data.vegetable.id} />
+					<input
+						disabled={isLoading}
+						placeholder="Quantity"
+						className="w-20"
+						name="quantity"
+						required
+					/>
+					<button
+						disabled={isLoading}
+						type="submit"
+						className="px-4 py-2 bg-green-600 text-white rounded"
+					>
+						Add to My Garden
+					</button>
+				</Form>
 			</div>
 		</div>
 	);

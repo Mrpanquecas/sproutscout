@@ -63,21 +63,18 @@ export async function addPlanting(request: Request): Promise<void> {
 	const accessToken = getCookieValue(cookieList, 'access-token');
 
 	const payload = JSON.stringify({ quantity, plantId });
-	try {
-		const resp = await fetch(`${process.env.API_URL}/api/v1/planting/add`, {
-			method: 'POST',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-				'content-type': 'application/json',
-			},
-			body: payload,
-		});
+	const resp = await fetch(`${process.env.API_URL}/api/v1/planting/add`, {
+		method: 'POST',
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+			'content-type': 'application/json',
+		},
+		body: payload,
+	});
 
-		if (resp.ok) {
-			const data = await resp.json();
-			return data;
-		}
-	} catch (error) {
-		console.log(error);
+	if (resp.ok) {
+		const data = await resp.json();
+		return data;
 	}
+	throw "Can't save planting";
 }

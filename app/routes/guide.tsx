@@ -28,11 +28,6 @@ export default function guide() {
 	const { climateZone } = useGardenStore();
 	const [showOnlyInSeason, setShowOnlyInSeason] = useState(false);
 
-	const vegetables = data.plants?.map((veggie) => ({
-		...veggie,
-		bestPlantingMonths: veggie.climateZones[climateZone] || [],
-	}));
-
 	const isLoading =
 		navigation.state === 'loading' || navigation.state === 'submitting';
 
@@ -60,7 +55,7 @@ export default function guide() {
 			</div>
 
 			<div className="grid gap-4 md:grid-cols-2">
-				{vegetables
+				{data.plants
 					?.filter(
 						(veggie) => !showOnlyInSeason || isInSeason(veggie, climateZone)
 					)
@@ -96,7 +91,7 @@ export default function guide() {
 									</p>
 									<p>
 										<span className="text-gray-500">Best Planting Months:</span>{' '}
-										{veggie.bestPlantingMonths
+										{veggie.climateZones[climateZone]
 											.map((m) => monthNames[m - 1]?.slice(0, 3))
 											.join(', ')}
 									</p>

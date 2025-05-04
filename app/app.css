@@ -15,7 +15,7 @@ body {
 }
 
 button {
-	@apply cursor-pointer;
+	@apply hover:cursor-pointer;
 }
 
 button:disabled {
