@@ -75,6 +75,8 @@ export default function garden() {
 													className="w-20"
 													name="quantity"
 													required
+													min={1}
+													type="number"
 													disabled={isLoading}
 												/>
 												<button

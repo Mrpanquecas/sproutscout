@@ -204,6 +204,8 @@ export default function VegetableDetails() {
 						placeholder="Quantity"
 						className="w-20"
 						name="quantity"
+						min={1}
+						type="number"
 						required
 					/>
 					<button
