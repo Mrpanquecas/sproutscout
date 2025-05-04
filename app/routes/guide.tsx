@@ -46,6 +46,7 @@ export default function guide() {
 						{climateZones.find((z) => z.id === climateZone)?.name} climate
 					</div>
 					<button
+						disabled={isLoading}
 						className={`px-3 py-1 text-sm rounded ${
 							showOnlyInSeason
 								? 'bg-green-600 text-white'
@@ -120,6 +121,7 @@ export default function guide() {
 										Add to My Garden
 									</button>
 									<button
+										disabled={isLoading}
 										onClick={() => navigate(`/vegetable/${veggie.id}`)}
 										type="button"
 										className="mt-3 bg-cyan-600 text-white px-3 py-1 rounded text-sm"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, redirect, useNavigate } from 'react-router';
+import { Outlet, redirect, useNavigate, useNavigation } from 'react-router';
 import { useLocation } from 'react-router';
 
 import { type ClimateTypes, monthNames, climateZones } from '~/utils/constants';
@@ -42,6 +42,10 @@ export default function PageLayout() {
 	const { climateZone, setClimateZone } = useGardenStore();
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
+	const navigation = useNavigation();
+
+	const isLoading =
+		navigation.state === 'loading' || navigation.state === 'submitting';
 
 	return (
 		<div className="p-4 bg-gray-100 max-w-4xl mx-auto rounded shadow">
@@ -59,6 +63,7 @@ export default function PageLayout() {
 						Climate Zone:
 					</label>
 					<select
+						disabled={isLoading}
 						className="border border-green-300 rounded p-1 bg-white"
 						value={climateZone}
 						onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
@@ -79,6 +84,7 @@ export default function PageLayout() {
 
 			<div className="flex flex-wrap mb-4 border-b border-gray-300">
 				<button
+					disabled={isLoading}
 					className={`px-4 py-2 ${
 						pathname === '/'
 							? 'text-green-700 border-b-2 border-green-700 font-semibold'
@@ -89,6 +95,7 @@ export default function PageLayout() {
 					My Garden
 				</button>
 				<button
+					disabled={isLoading}
 					className={`px-4 py-2 ${
 						pathname === '/layout'
 							? 'text-green-700 border-b-2 border-green-700 font-semibold'
@@ -99,6 +106,7 @@ export default function PageLayout() {
 					Garden Designer
 				</button>
 				<button
+					disabled={isLoading}
 					className={`px-4 py-2 ${
 						pathname === '/guide'
 							? 'text-green-700 border-b-2 border-green-700 font-semibold'
@@ -109,6 +117,7 @@ export default function PageLayout() {
 					Veggie Guide
 				</button>
 				<button
+					disabled={isLoading}
 					className={`px-4 py-2 ${
 						pathname === '/calendar'
 							? 'text-green-700 border-b-2 border-green-700 font-semibold'
