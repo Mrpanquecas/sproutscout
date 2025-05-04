@@ -7,15 +7,12 @@ export async function getGarden(request: Request): Promise<Garden | undefined> {
 
 	const accessToken = getCookieValue(cookieList, 'access-token');
 	try {
-		const resp = await fetch(
-			`https://tometrics-api.onrender.com/api/v1/planting/all`,
-			{
-				method: 'GET',
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
+		const resp = await fetch(`${process.env.API_URL}/api/v1/planting/all`, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
 
 		if (resp.ok) {
 			const data = await resp.json();
@@ -30,25 +27,20 @@ export async function getVegetables(request: Request) {
 	let plants: Vegetable[] = [];
 	const cookieList = request.headers.get('Cookie');
 	if (!cookieList) return;
-	console.log('REQUESTED');
 
 	const accessToken = getCookieValue(cookieList, 'access-token');
 	try {
-		const resp = await fetch(
-			`https://tometrics-api.onrender.com/api/v1/plant/all`,
-			{
-				method: 'GET',
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			}
-		);
+		const resp = await fetch(`${process.env.API_URL}/api/v1/plant/all`, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
 
 		if (resp.ok) {
 			const data = await resp.json();
 			plants = data.plants;
 		}
-		console.log(resp);
 	} catch (error) {
 		console.log(error);
 	}
@@ -65,7 +57,7 @@ export async function getVegetableDetails(
 	const accessToken = getCookieValue(cookieList, 'access-token');
 	try {
 		const resp = await fetch(
-			`https://tometrics-api.onrender.com/api/v1/plant/${vegetableId}`,
+			`${process.env.API_URL}/api/v1/plant/${vegetableId}`,
 			{
 				method: 'GET',
 				headers: {
@@ -82,3 +74,29 @@ export async function getVegetableDetails(
 		console.log(error);
 	}
 }
+
+type AuthResponse = {
+	accessToken: string;
+	refreshToken: string;
+};
+
+export const authAnonUser = async (): Promise<AuthResponse | undefined> => {
+	try {
+		const resp = await fetch(
+			`${process.env.API_URL}/api/v1/auth/anon/register`,
+			{
+				method: 'POST',
+			}
+		);
+
+		if (resp.ok) {
+			const data = await resp.json();
+			return {
+				accessToken: data.access,
+				refreshToken: data.refresh,
+			};
+		}
+	} catch (error) {
+		console.log(error);
+	}
+};

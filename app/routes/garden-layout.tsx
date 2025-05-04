@@ -19,7 +19,6 @@ export default function layout() {
 	const {
 		setPlantedPlants,
 		climateZone,
-		currentMonth,
 		plantedPlants,
 		gardenLayout,
 		setGardenLayout,
@@ -245,8 +244,7 @@ export default function layout() {
 							{data.plants
 								?.filter(
 									(veggie) =>
-										!showOnlyInSeason ||
-										isInSeason(veggie, currentMonth, climateZone)
+										!showOnlyInSeason || isInSeason(veggie, climateZone)
 								)
 								.map((veggie) => (
 									<div
@@ -260,7 +258,7 @@ export default function layout() {
 									>
 										<div className="flex justify-between">
 											<div className="text-sm font-medium">{veggie.name}</div>
-											{isInSeason(veggie, currentMonth, climateZone) && (
+											{isInSeason(veggie, climateZone) && (
 												<span className="bg-green-100 text-green-800 text-xs px-1 rounded-full">
 													In Season
 												</span>

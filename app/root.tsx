@@ -32,6 +32,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<Helmet>
+					<title>Create your own garden!</title>
+					<meta content="Tometrics allows you to create your own garden and check for current in season vegetables to be planted" />
 					<script src="https://accounts.google.com/gsi/client" async />
 				</Helmet>
 				<Meta />

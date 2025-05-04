@@ -1,9 +1,12 @@
 import type { ClimateTypes, Vegetable } from './constants';
+import { getCurrentMonth } from './get-current-month';
 
 export const isInSeason = (
 	veggie: Vegetable,
-	currentMonth: number,
-	climateZone: ClimateTypes
+	climateZone: ClimateTypes,
+	month?: number
 ) => {
-	return veggie.climateZones[climateZone].includes(currentMonth + 1);
+	return veggie.climateZones[climateZone].includes(
+		month || getCurrentMonth() + 1
+	);
 };

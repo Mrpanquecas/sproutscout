@@ -1,35 +1,46 @@
 import React from 'react';
-
-import { useGardenStore } from '../store/store';
 import { monthNames } from '../utils/constants';
 import type { Route } from './+types/garden';
 import { getGarden } from '~/utils/loader-helpers';
-import { useLoaderData } from 'react-router';
+import { Form, useLoaderData, useNavigation } from 'react-router';
 import { formatYield } from '~/utils/format-yield';
 import { formatDate } from '../utils/format-date';
 import { calculateTimeToHarvest } from '~/utils/calculate-time-to-harvest';
-import { Helmet } from 'react-helmet';
+import { deletePlanting, updateQuantity } from '~/utils/action-helpers';
+import { getCurrentMonth } from '~/utils/get-current-month';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const gardenRequest = await getGarden(request);
 
 	return { garden: gardenRequest };
 }
+
+export async function action({ request }: Route.ActionArgs) {
+	const formData = await request.formData();
+	const intent = formData.get('intent');
+
+	if (intent === 'delete') {
+		await deletePlanting(request, formData);
+	}
+
+	if (intent === 'change-quantity') {
+		await updateQuantity(request, formData);
+	}
+}
+
 export default function garden() {
 	const data = useLoaderData<typeof loader>();
-	const { currentMonth } = useGardenStore();
+	const navigation = useNavigation();
 
-	/* 	const removePlant = (id: number) => {
-	}; */
+	const isLoading =
+		navigation.state === 'loading' || navigation.state === 'submitting';
 
 	return (
 		<div>
-			<Helmet>
-				<title>Create your own garden!</title>
-				<meta content="Tometrics allows you to create your own garden and check for current in season vegetables to be planted" />
-			</Helmet>
 			<div className="flex justify-between items-center mb-4">
-				<div className="text-lg">Current Month: {monthNames[currentMonth]}</div>
+				<div className="text-lg">
+					Current Month: {monthNames[getCurrentMonth()]}
+				</div>
 			</div>
 			{data.garden?.plantings.length === 0 ? (
 				<div className="text-center py-8 text-gray-500">
@@ -38,52 +49,84 @@ export default function garden() {
 				</div>
 			) : (
 				<div className="space-y-4">
-					{data.garden?.plantings.map(({ plant, totalYield, createdAt }) => {
-						const plantDate = formatDate(new Date(createdAt));
-						return (
-							<div
-								key={plant.id}
-								className="p-4 rounded border bg-white border-green-200"
-							>
-								<div className="flex justify-between">
-									<h3 className="text-lg font-medium text-green-700">
-										{plant.name}
-									</h3>
-									<button
-										onClick={() => {}}
-										className="px-2 py-1 rounded bg-red-100 text-red-700"
-									>
-										Remove
-									</button>
+					{data.garden?.plantings.map(
+						({ plant, totalYield, createdAt, id, readyToHarvestAt }) => {
+							const plantDate = formatDate(new Date(createdAt));
+							return (
+								<div
+									key={plant.id}
+									className="p-4 rounded border bg-white border-green-200"
+								>
+									<div className="flex justify-between">
+										<h3 className="text-lg font-medium text-green-700">
+											{plant.name}
+										</h3>
+										<div className="flex gap-2">
+											<Form method="POST">
+												<input
+													type="hidden"
+													name="intent"
+													value="change-quantity"
+												/>
+												<input type="hidden" name="id" value={id} />
+												<input
+													placeholder="Quantity"
+													className="w-20"
+													name="quantity"
+													required
+													disabled={isLoading}
+												/>
+												<button
+													disabled={isLoading}
+													type="submit"
+													className="bg-green-600 text-white px-2 py-1 rounded text-sm"
+												>
+													Update quanity
+												</button>
+											</Form>
+											<Form method="POST">
+												<input type="hidden" name="intent" value="delete" />
+												<input type="hidden" name="id" value={id} />
+												<button
+													type="submit"
+													className="px-2 py-1 rounded bg-red-100 text-red-700 text-sm"
+													disabled={isLoading}
+												>
+													Remove
+												</button>
+											</Form>
+										</div>
+									</div>
+									<div className="mt-2 flex flex-col gap-2">
+										<div>
+											<span className="text-gray-500">Planted:</span>{' '}
+											{plantDate}
+										</div>
+										<div>
+											<span className="text-gray-500">
+												Harvest window starts in:
+											</span>{' '}
+											{calculateTimeToHarvest(readyToHarvestAt)}
+										</div>
+										<div>
+											<span className="text-gray-500">Per Plant:</span>{' '}
+											{formatYield(plant.yieldPerPlant)}
+										</div>
+										<div className="col-span-2">
+											<span className="text-gray-500">
+												Total Estimated Yield:
+											</span>{' '}
+											{formatYield(totalYield)}
+										</div>
+										<div className="col-span-2">
+											<span className="text-gray-500">Companion Plants:</span>{' '}
+											{plant.companionPlants?.join(', ')}
+										</div>
+									</div>
 								</div>
-								<div className="mt-2 grid grid-cols-2 gap-2">
-									<div>
-										<span className="text-gray-500">Planted:</span> {plantDate}
-									</div>
-									<div>
-										<span className="text-gray-500">
-											Harvest window starts in:
-										</span>{' '}
-										{calculateTimeToHarvest(plantDate, plant.timeToHarvest)}
-									</div>
-									<div>
-										<span className="text-gray-500">Per Plant:</span>{' '}
-										{formatYield(plant.yieldPerPlant)}
-									</div>
-									<div className="col-span-2">
-										<span className="text-gray-500">
-											Total Estimated Yield:
-										</span>{' '}
-										{formatYield(totalYield)}
-									</div>
-									<div className="col-span-2">
-										<span className="text-gray-500">Companion Plants:</span>{' '}
-										{plant.companionPlants?.join(', ')}
-									</div>
-								</div>
-							</div>
-						);
-					})}
+							);
+						}
+					)}
 				</div>
 			)}
 		</div>

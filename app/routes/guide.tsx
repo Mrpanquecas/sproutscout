@@ -7,50 +7,17 @@ import { useNavigate, useLoaderData, Form, useNavigation } from 'react-router';
 import type { Route } from './+types/guide';
 import { getGarden, getVegetables } from '~/utils/loader-helpers';
 import { formatYield } from '~/utils/format-yield';
-import { getCookieValue } from '~/utils/cookie-util';
+import { addPlanting } from '~/utils/action-helpers';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const plantsRequest = await getVegetables(request);
 	const gardenRequest = await getGarden(request);
 
-	console.log(gardenRequest);
-
 	return { plants: plantsRequest, garden: gardenRequest };
 }
 
 export async function action({ request }: Route.ActionArgs) {
-	const formData = await request.formData();
-	const quantity = formData.get('quantity');
-	const plantId = formData.get('id');
-	//const project = await fakeDb.updateProject({ title });
-	//return project;
-
-	const cookieList = request.headers.get('Cookie');
-	if (!cookieList) return;
-
-	const accessToken = getCookieValue(cookieList, 'access-token');
-
-	const payload = JSON.stringify({ quantity, plantId });
-	try {
-		const resp = await fetch(
-			`https://tometrics-api.onrender.com/api/v1/planting/add`,
-			{
-				method: 'POST',
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-					'content-type': 'application/json',
-				},
-				body: payload,
-			}
-		);
-
-		if (resp.ok) {
-			const data = await resp.json();
-			return data;
-		}
-	} catch (error) {
-		console.log(error);
-	}
+	await addPlanting(request);
 }
 
 export default function guide() {
@@ -58,7 +25,7 @@ export default function guide() {
 	const navigation = useNavigation();
 	const navigate = useNavigate();
 
-	const { climateZone, currentMonth } = useGardenStore();
+	const { climateZone } = useGardenStore();
 	const [showOnlyInSeason, setShowOnlyInSeason] = useState(false);
 
 	const vegetables = data.plants?.map((veggie) => ({
@@ -94,21 +61,20 @@ export default function guide() {
 			<div className="grid gap-4 md:grid-cols-2">
 				{vegetables
 					?.filter(
-						(veggie) =>
-							!showOnlyInSeason || isInSeason(veggie, currentMonth, climateZone)
+						(veggie) => !showOnlyInSeason || isInSeason(veggie, climateZone)
 					)
 					.map((veggie) => (
 						<Form key={veggie.id} method="POST" className="flex">
 							<div
 								className={`p-4 rounded border flex flex-col justify-between grow ${
-									isInSeason(veggie, currentMonth, climateZone)
+									isInSeason(veggie, climateZone)
 										? 'border-green-300 bg-green-50'
 										: 'border-gray-300 bg-white'
 								}`}
 							>
 								<div className="flex justify-between items-start">
 									<h3 className="text-lg font-medium">{veggie.name}</h3>
-									{isInSeason(veggie, currentMonth, climateZone) && (
+									{isInSeason(veggie, climateZone) && (
 										<span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
 											Good time to plant!
 										</span>
@@ -139,7 +105,7 @@ export default function guide() {
 									</p>
 								</div>
 								<div className="gap-4 flex items-end">
-									<input className="hidden" name="id" value={veggie.id} />
+									<input type="hidden" name="id" value={veggie.id} />
 									<input
 										placeholder="Quantity"
 										className="w-20"
@@ -151,12 +117,12 @@ export default function guide() {
 										type="submit"
 										className="mt-3 bg-green-600 text-white px-3 py-1 rounded text-sm"
 									>
-										{'Add to My Garden'}
+										Add to My Garden
 									</button>
 									<button
 										onClick={() => navigate(`/vegetable/${veggie.id}`)}
 										type="button"
-										className="mt-3 bg-green-600 text-white px-3 py-1 rounded text-sm"
+										className="mt-3 bg-cyan-600 text-white px-3 py-1 rounded text-sm"
 									>
 										See details
 									</button>

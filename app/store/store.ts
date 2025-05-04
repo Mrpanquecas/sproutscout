@@ -12,7 +12,6 @@ interface GardenState {
 	setClimateZone: (climate: ClimateTypes) => void;
 	plantedPlants: PlantedVegetable[];
 	setPlantedPlants: (plant: PlantedVegetable[]) => void;
-	currentMonth: number;
 	gardenLayout: GardenLayout;
 	setGardenLayout: (layout: GardenLayout) => void;
 	gardenSize: GardenSize;
@@ -26,7 +25,6 @@ export const useGardenStore = create<GardenState>()(
 		persist(
 			(set) => ({
 				climateZone: 'temperate',
-				currentMonth: new Date().getMonth(),
 				setClimateZone: (climate) => set({ climateZone: climate }),
 				plantedPlants: [],
 				setPlantedPlants: (vetables) => set({ plantedPlants: vetables }),

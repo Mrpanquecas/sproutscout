@@ -4,18 +4,16 @@
  * @param {any} timeToHarvest:number
  * @returns {any} timeframe: string
  */
-export const calculateTimeToHarvest = (
-	harvestDateString: string,
-	harvestTime: number
-): string => {
-	const harvestDate = new Date();
-	harvestDate.setDate(harvestDate.getDate() + harvestTime);
-	const [day, month, year] = harvestDateString.split('/').map(Number);
-	const plantTime = new Date(year, month - 1, day);
+export const calculateTimeToHarvest = (readyToHarvestAt: number): string => {
+	const harvestDate = new Date(readyToHarvestAt);
+	console.log(harvestDate);
+	const todayDate = new Date();
 
-	const diffDays = Math.ceil(
-		(plantTime.getTime() - harvestDate.getTime()) / (1000 * 60 * 60 * 24)
-	);
+	const diff = Math.abs(harvestDate.getTime() - todayDate.getTime());
+
+	const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+
+	console.log(diffDays);
 
 	if (diffDays <= 0) {
 		return 'Now!';

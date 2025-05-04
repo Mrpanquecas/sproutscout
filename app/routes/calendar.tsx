@@ -52,8 +52,8 @@ export default function calendar() {
 								{monthNames.map((month, index) => {
 									const isPlantingMonth = isInSeason(
 										veggie,
-										index + 1,
-										climateZone
+										climateZone,
+										index + 1
 									);
 
 									const harvestMonth = getHarvestMonth(veggie, climateZone);

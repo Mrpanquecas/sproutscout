@@ -11,7 +11,7 @@ export const getHarvestMonth = (
 ): number[] => {
 	const harvestMonth: number[] = [];
 	const bestMonths = vegetable.climateZones[climateZone];
-	console.log(bestMonths);
+
 	for (const plantMonth of bestMonths) {
 		const hMonth =
 			((plantMonth - 1 + Math.ceil(vegetable.timeToHarvest / 30)) % 12) + 1;

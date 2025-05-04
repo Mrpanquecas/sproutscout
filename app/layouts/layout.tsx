@@ -1,36 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Outlet, redirect, useNavigate } from 'react-router';
 import { useLocation } from 'react-router';
 
 import { type ClimateTypes, monthNames, climateZones } from '~/utils/constants';
 import { useGardenStore } from '../store/store';
 import type { Route } from './+types/layout';
-
-type AuthResponse = {
-	accessToken: string;
-	refreshToken: string;
-};
-
-const authAnonUser = async (): Promise<AuthResponse | undefined> => {
-	try {
-		const resp = await fetch(
-			`https://tometrics-api.onrender.com/api/v1/auth/anon/register`,
-			{
-				method: 'POST',
-			}
-		);
-
-		if (resp.ok) {
-			const data = await resp.json();
-			return {
-				accessToken: data.access,
-				refreshToken: data.refresh,
-			};
-		}
-	} catch (error) {
-		console.log(error);
-	}
-};
+import { authAnonUser } from '~/utils/loader-helpers';
+import { getCurrentMonth } from '~/utils/get-current-month';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const cookieList = request.headers.get('Cookie');
@@ -64,7 +40,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function PageLayout() {
 	const { climateZone, setClimateZone } = useGardenStore();
-	const [currentMonth] = useState(new Date().getMonth());
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 
@@ -76,7 +51,7 @@ export default function PageLayout() {
 			<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
 				<p className="text-sm text-green-600">
 					Currently showing vegetables appropriate for{' '}
-					{monthNames[currentMonth]}
+					{monthNames[getCurrentMonth()]}
 				</p>
 
 				<div className="mt-2 md:mt-0">
