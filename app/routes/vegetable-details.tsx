@@ -52,7 +52,7 @@ export default function VegetableDetails() {
 
 	if (!data.vegetable) return <></>;
 	return (
-		<div className="bg-white rounded-lg shadow-md p-6">
+		<div className="bg-white">
 			<div className="flex justify-between items-start mb-6">
 				<div>
 					<h2 className="text-2xl font-bold text-green-700">

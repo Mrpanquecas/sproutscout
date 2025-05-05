@@ -21,6 +21,7 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function guide() {
+	const [filter, setFilter] = useState<string>('');
 	const data = useLoaderData<typeof loader>();
 	const navigation = useNavigation();
 	const navigate = useNavigate();
@@ -35,44 +36,41 @@ export default function guide() {
 		<div>
 			<div className="mb-4 flex justify-between items-center">
 				<h2 className="text-xl text-green-700">Vegetables Guide</h2>
-				<div className="flex items-center gap-3">
-					<div className="text-sm text-green-600">
-						Showing veggies for{' '}
-						{climateZones.find((z) => z.id === climateZone)?.name} climate
-					</div>
-					<button
-						disabled={isLoading}
-						className={`px-3 py-1 text-sm rounded ${
-							showOnlyInSeason
-								? 'bg-green-600 text-white'
-								: 'bg-gray-200 text-gray-700'
-						}`}
-						onClick={() => setShowOnlyInSeason(!showOnlyInSeason)}
-					>
-						{showOnlyInSeason ? '✓ In Season Only' : 'Show All'}
-					</button>
-				</div>
 			</div>
-
+			<div className="mb-2 flex gap-4">
+				<input
+					className="border border-gray-400 px-2 rounded-sm"
+					placeholder="Filter"
+					type="text"
+					onChange={(e) => setFilter(e.target.value.toLowerCase())}
+				/>
+				<button
+					disabled={isLoading}
+					className={'px-3 py-1 text-sm rounded bg-green-600 text-white'}
+					onClick={() => setShowOnlyInSeason(!showOnlyInSeason)}
+				>
+					{showOnlyInSeason ? 'Show all' : 'Show in season'}
+				</button>
+			</div>
 			<div className="grid gap-4 md:grid-cols-2">
 				{data.plants
 					?.filter(
-						(veggie) => !showOnlyInSeason || isInSeason(veggie, climateZone)
+						(veggie) =>
+							(!showOnlyInSeason || isInSeason(veggie, climateZone)) &&
+							veggie.name.toLocaleLowerCase().includes(filter)
 					)
 					.map((veggie) => (
 						<Form key={veggie.id} method="POST" className="flex">
 							<div
-								className={`p-4 rounded border flex flex-col justify-between grow ${
-									isInSeason(veggie, climateZone)
-										? 'border-green-300 bg-green-50'
-										: 'border-gray-300 bg-white'
-								}`}
+								className={
+									'p-4 rounded border flex flex-col justify-between grow border-gray-300 bg-white'
+								}
 							>
 								<div className="flex justify-between items-start">
 									<h3 className="text-lg font-medium">{veggie.name}</h3>
 									{isInSeason(veggie, climateZone) && (
 										<span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-											Good time to plant!
+											In season!
 										</span>
 									)}
 								</div>

@@ -242,7 +242,6 @@ export type Vegetable = {
 	waterRequirement: WaterRequirement;
 	growthHabit: PlantGrowthHabit;
 	growingTips: GrowingTip[];
-	bestPlantingMonths?: number[];
 };
 
 export type PlantYield = {
