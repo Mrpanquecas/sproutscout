@@ -1,20 +1,29 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { useLoaderData } from 'react-router';
+import { useLocation } from 'react-router';
 import useAuth from '../auth/use-auth';
 import GoogleProvider from '~/auth/providers/google-provider';
-import AuthProvider from '~/auth/auth-provider';
 
-interface LoaderData {
-	message: string;
-}
+// Function to load and initialize the Google Sign-In script
+const loadGoogleScript = (): void => {
+	// Remove any existing script first to force re-initialization
+	// eslint-disable-next-line unicorn/prefer-query-selector
+	const existingScript = document.getElementById('google-signin-script');
+	if (existingScript) {
+		existingScript.remove();
+	}
 
-export function loader(): LoaderData {
-	return { message: 'Please sign in to continue' };
-}
+	// Create and add the script
+	const script = document.createElement('script');
+	script.src = 'https://accounts.google.com/gsi/client';
+	script.async = true;
+	script.defer = true;
+	script.id = 'google-signin-script';
 
+	document.body.append(script);
+};
 export default function Login() {
-	const { message } = useLoaderData() as LoaderData;
+	const { pathname } = useLocation();
 	const { handleAuthSuccess } = useAuth();
 	const [error, setError] = useState<string | null>(null);
 
@@ -23,23 +32,13 @@ export default function Login() {
 		onError: (err: string) => setError(err),
 	});
 
-	const x = function handleCredentialResponse(
-		response //is the callback function that handles the ID token received from Google.
-	) {
-		const data = response;
-		console.log('User data:', data);
-
-		// Display user data or perform your login logic here
-		document.body.innerHTML = `
-  <h1>Welcome, ${data.name}</h1>
-  <p>Email: ${data.email}</p>
-  <img src="${data.picture}" alt="Profile Picture">
-  `;
-	};
-
+	// Re-load script on route changes
 	useEffect(() => {
-		window.handleCredentialResponse = x;
-	}, []);
+		// Only reload if not the initial render
+		if (pathname) {
+			loadGoogleScript();
+		}
+	}, [pathname]);
 
 	return (
 		<div className="flex flex-col justify-center items-center">

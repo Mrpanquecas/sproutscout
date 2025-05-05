@@ -35,7 +35,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 	};
 
 	useEffect(() => {
-		checkAuthStatus();
+		//checkAuthStatus();
 	}, []);
 
 	const context: AuthContextType = {
