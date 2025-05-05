@@ -3,7 +3,13 @@ import { useGardenStore } from '~/store/store';
 import { climateZones, monthNames } from '~/utils/constants';
 import { useState } from 'react';
 import { isInSeason } from '../utils/in-season';
-import { useNavigate, useLoaderData, Form, useNavigation } from 'react-router';
+import {
+	useNavigate,
+	useLoaderData,
+	Form,
+	useNavigation,
+	redirect,
+} from 'react-router';
 import type { Route } from './+types/guide';
 import { getGarden, getVegetables } from '~/utils/loader-helpers';
 import { formatYield } from '~/utils/format-yield';
@@ -18,6 +24,8 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export async function action({ request }: Route.ActionArgs) {
 	await addPlanting(request);
+
+	return redirect('/');
 }
 
 export default function guide() {
@@ -76,19 +84,21 @@ export default function guide() {
 								</div>
 								<div className="mt-2 space-y-1 text-sm">
 									<p>
-										<span className="text-gray-500">Time to Harvest:</span>{' '}
+										<span className="text-gray-500">Time to Harvest: </span>
 										{veggie.timeToHarvest} days
 									</p>
 									<p>
-										<span className="text-gray-500">Yield per Plant:</span>
+										<span className="text-gray-500">Yield per Plant: </span>
 										{formatYield(veggie.yieldPerPlant)}
 									</p>
 									<p>
-										<span className="text-gray-500">Yield per Area:</span>{' '}
+										<span className="text-gray-500">Yield per Area: </span>
 										{formatYield(veggie.yieldPerSqM)}
 									</p>
 									<p>
-										<span className="text-gray-500">Best Planting Months:</span>{' '}
+										<span className="text-gray-500">
+											Best Planting Months:{' '}
+										</span>
 										{veggie.climateZones[climateZone]
 											.map((m) => monthNames[m - 1]?.slice(0, 3))
 											.join(', ')}

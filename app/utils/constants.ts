@@ -256,6 +256,7 @@ export type GardenEntry = {
 	createdAt: number;
 	totalYield: PlantYield;
 	readyToHarvestAt: number;
+	quantity: number;
 };
 
 export type Garden = {

@@ -50,95 +50,108 @@ export default function garden() {
 					<p>Click &quot;Add Random Veggie&quot; to get started!</p>
 				</div>
 			) : (
-				<div className="space-y-4">
-					{data.garden?.plantings.map(
-						({ plant, totalYield, createdAt, id, readyToHarvestAt }) => {
-							const plantDate = formatDate(new Date(createdAt));
-							return (
-								<div
-									key={plant.id}
-									className="p-4 rounded border bg-white border-green-200"
-								>
-									<div className="flex justify-between">
-										<h3 className="text-lg font-medium text-green-700">
-											{plant.name}
-										</h3>
-										<div className="flex gap-2">
-											<Form method="POST" className="flex gap-2">
-												<input
-													type="hidden"
-													name="intent"
-													value="change-quantity"
-												/>
-												<input type="hidden" name="id" value={id} />
-												<input
-													placeholder="Quantity"
-													className="w-20"
-													name="quantity"
-													required
-													min={1}
-													type="number"
-													disabled={isLoading}
-												/>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div className="space-y-4 md:order-first order-last">
+						{data.garden?.plantings.map(
+							({
+								plant,
+								totalYield,
+								createdAt,
+								id,
+								quantity,
+								readyToHarvestAt,
+							}) => {
+								const plantDate = formatDate(new Date(createdAt));
+								return (
+									<div
+										key={id}
+										className="p-4 rounded border bg-white border-green-200"
+									>
+										<div className="flex justify-between">
+											<h3 className="text-lg font-medium text-green-700">
+												{plant.name}
+											</h3>
+											<div className="flex gap-2">
+												<Form method="POST" className="flex gap-2">
+													<input
+														type="hidden"
+														name="intent"
+														value="change-quantity"
+													/>
+													<input type="hidden" name="id" value={id} />
+													<input
+														placeholder="Quantity"
+														className="w-20"
+														name="quantity"
+														required
+														min={1}
+														type="number"
+														disabled={isLoading}
+													/>
+													<button
+														disabled={isLoading}
+														type="submit"
+														className="bg-green-600 text-white px-2 py-1 rounded text-sm"
+													>
+														Update
+													</button>
+												</Form>
+												<Form method="POST">
+													<input type="hidden" name="intent" value="delete" />
+													<input type="hidden" name="id" value={id} />
+													<button
+														type="submit"
+														className="px-2 py-2 rounded bg-red-100 text-red-700"
+														disabled={isLoading}
+													>
+														<TrashIcon className="size-5" />
+													</button>
+												</Form>
 												<button
 													disabled={isLoading}
-													type="submit"
-													className="bg-green-600 text-white px-2 py-1 rounded text-sm"
+													onClick={() => navigate(`/vegetable/${plant.id}`)}
+													type="button"
+													className="bg-cyan-600 text-white px-3 py-1 rounded"
 												>
-													Update
+													<EyeIcon className="size-5" />
 												</button>
-											</Form>
-											<Form method="POST">
-												<input type="hidden" name="intent" value="delete" />
-												<input type="hidden" name="id" value={id} />
-												<button
-													type="submit"
-													className="px-2 py-2 rounded bg-red-100 text-red-700"
-													disabled={isLoading}
-												>
-													<TrashIcon className="size-5" />
-												</button>
-											</Form>
-											<button
-												disabled={isLoading}
-												onClick={() => navigate(`/vegetable/${plant.id}`)}
-												type="button"
-												className="bg-cyan-600 text-white px-3 py-1 rounded"
-											>
-												<EyeIcon className="size-5" />
-											</button>
+											</div>
+										</div>
+										<div className="mt-2 flex flex-col gap-2">
+											<div>
+												<span className="text-gray-500">Planted:</span>{' '}
+												{plantDate}
+											</div>
+											<div>
+												<span className="text-gray-500">Quantity:</span>{' '}
+												{quantity}
+											</div>
+											<div>
+												<span className="text-gray-500">
+													Harvest window starts in:
+												</span>{' '}
+												{calculateTimeToHarvest(readyToHarvestAt)}
+											</div>
+											<div className="col-span-2">
+												<span className="text-gray-500">
+													Total Estimated Yield:
+												</span>{' '}
+												{formatYield(totalYield)}
+											</div>
 										</div>
 									</div>
-									<div className="mt-2 flex flex-col gap-2">
-										<div>
-											<span className="text-gray-500">Planted:</span>{' '}
-											{plantDate}
-										</div>
-										<div>
-											<span className="text-gray-500">
-												Harvest window starts in:
-											</span>{' '}
-											{calculateTimeToHarvest(readyToHarvestAt)}
-										</div>
-										<div>
-											<span className="text-gray-500">Per Plant:</span>{' '}
-											{formatYield(plant.yieldPerPlant)}
-										</div>
-										<div className="col-span-2">
-											<span className="text-gray-500">
-												Total Estimated Yield:
-											</span>{' '}
-											{formatYield(totalYield)}
-										</div>
-										<div className="col-span-2">
-											<span className="text-gray-500">Companion Plants:</span>{' '}
-											{plant.companionPlants?.join(', ')}
-										</div>
-									</div>
-								</div>
-							);
-						}
-					)}
+								);
+							}
+						)}
+					</div>
+					<div className="flex flex-col gap-6 order-first md:order-last">
+						<div className="p-4 rounded border bg-white border-green-200">
+							Garden summary will go here
+						</div>
+						<div className="p-4 rounded border bg-white border-green-200">
+							Diary will go here
+						</div>
+					</div>
 				</div>
 			)}
 		</div>

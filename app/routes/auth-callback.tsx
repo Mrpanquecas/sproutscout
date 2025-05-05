@@ -5,7 +5,7 @@ export async function action({ request }: Route.ActionArgs) {
 	console.log('REQUEST', request);
 
 	const formData = await request.formData();
-
+	const cookies = (await request.headers.get('cookie')) || '';
 	const idToken = formData.get('credential');
 	const csrfToken = formData.get('g_csrf_token');
 
@@ -16,6 +16,7 @@ export async function action({ request }: Route.ActionArgs) {
 		method: 'POST',
 		headers: {
 			'content-type': 'application/json',
+			cookie: cookies,
 		},
 		body: payload,
 	});
@@ -28,16 +29,16 @@ export async function action({ request }: Route.ActionArgs) {
 		const headers = new Headers();
 		headers.append(
 			'Set-Cookie',
-			`access-token=${data.accessToken}; Path=/; Max-Age=3600; SameSite=Lax`
+			`access-token=${data.access}; Path=/; Max-Age=3600; SameSite=Lax`
 		);
 		headers.append(
 			'Set-Cookie',
-			`refresh-token=${data.refreshToken}; Path=/; Max-Age=${
+			`refresh-token=${data.refresh}; Path=/; Max-Age=${
 				30 * 24 * 3600
 			}; SameSite=Lax`
 		);
 
-		return redirect(request.url, {
+		return redirect('/', {
 			headers,
 		});
 	}
