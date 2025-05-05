@@ -8,6 +8,7 @@ import { formatDate } from '../utils/format-date';
 import { calculateTimeToHarvest } from '~/utils/calculate-time-to-harvest';
 import { deletePlanting, updateQuantity } from '~/utils/action-helpers';
 import { getCurrentMonth } from '~/utils/get-current-month';
+import { EyeIcon, TrashIcon } from '@heroicons/react/16/solid';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const gardenRequest = await getGarden(request);
@@ -63,7 +64,7 @@ export default function garden() {
 											{plant.name}
 										</h3>
 										<div className="flex gap-2">
-											<Form method="POST">
+											<Form method="POST" className="flex gap-2">
 												<input
 													type="hidden"
 													name="intent"
@@ -84,7 +85,7 @@ export default function garden() {
 													type="submit"
 													className="bg-green-600 text-white px-2 py-1 rounded text-sm"
 												>
-													Update quanity
+													Update
 												</button>
 											</Form>
 											<Form method="POST">
@@ -92,19 +93,19 @@ export default function garden() {
 												<input type="hidden" name="id" value={id} />
 												<button
 													type="submit"
-													className="px-2 py-1 rounded bg-red-100 text-red-700 text-sm"
+													className="px-2 py-2 rounded bg-red-100 text-red-700"
 													disabled={isLoading}
 												>
-													Remove
+													<TrashIcon className="size-5" />
 												</button>
 											</Form>
 											<button
 												disabled={isLoading}
 												onClick={() => navigate(`/vegetable/${plant.id}`)}
 												type="button"
-												className="bg-cyan-600 text-white px-3 py-1 rounded text-sm"
+												className="bg-cyan-600 text-white px-3 py-1 rounded"
 											>
-												See details
+												<EyeIcon className="size-5" />
 											</button>
 										</div>
 									</div>

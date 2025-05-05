@@ -49,7 +49,7 @@ export default function guide() {
 					className={'px-3 py-1 text-sm rounded bg-green-600 text-white'}
 					onClick={() => setShowOnlyInSeason(!showOnlyInSeason)}
 				>
-					{showOnlyInSeason ? 'Show all' : 'Show in season'}
+					{showOnlyInSeason ? 'Show all' : 'Show only in season'}
 				</button>
 			</div>
 			<div className="grid gap-4 md:grid-cols-2">
