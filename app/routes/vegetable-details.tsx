@@ -21,6 +21,7 @@ import { getVegetableDetails } from '~/utils/loader-helpers';
 import { formatYield } from '~/utils/format-yield';
 import { addPlanting } from '~/utils/action-helpers';
 import { useGardenStore } from '~/store/store';
+import CalendarTable from '~/components/calendar-table';
 
 export async function loader({ params, request }: Route.LoaderArgs) {
 	const vegetable: Vegetable = await getVegetableDetails(
@@ -158,35 +159,10 @@ export default function VegetableDetails() {
 
 			<div className="mb-6">
 				<h3 className="text-xl font-semibold text-green-700 mb-2">
-					Monthly Growing Calendar
+					Growing Calendar
 				</h3>
 				<div className="overflow-x-auto">
-					<table className="min-w-full bg-white border">
-						<thead>
-							<tr>
-								{/*                 veggie.monthlyGuide.map((item, index) => (
-									<th
-										key={index}
-										className="py-2 px-3 border-b bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase"
-									>
-										{item.month}
-									</th>
-								)) */}
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								{/*                 veggie.monthlyGuide.map((item, index) => (
-									<td
-										key={index}
-										className="py-2 px-3 border-b text-center text-sm"
-									>
-										{item.activity}
-									</td>
-								)) */}
-							</tr>
-						</tbody>
-					</table>
+					<CalendarTable vegetables={[data.vegetable]} />
 				</div>
 			</div>
 
