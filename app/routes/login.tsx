@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useLoaderData } from 'react-router';
 import useAuth from '../auth/use-auth';
 import GoogleProvider from '~/auth/providers/google-provider';
+import AuthProvider from '~/auth/auth-provider';
 
 interface LoaderData {
 	message: string;
@@ -41,34 +42,28 @@ export default function Login() {
 	}, []);
 
 	return (
-		<div className="login-container">
-			<h1>Login</h1>
-			<p>{message}</p>
+		<div className="flex flex-col justify-center items-center">
+			<div className="rounded border p-4 border-gray-300 gap-4">
+				<h1 className="mb-6">Login:</h1>
+				<div
+					id="g_id_onload"
+					data-client_id="201477670303-t3qm85ov000hfk3konc95jjp36ds1i3k.apps.googleusercontent.com"
+					data-context="signin"
+					data-ux_mode="popup"
+					data-login_uri="auth-callback"
+					data-auto_prompt="false"
+				></div>
 
-			{error && <div className="error">{error}</div>}
-
-			<button onClick={() => googleProvider.signIn()} className="google-button">
-				Sign in with Google
-			</button>
-
-			<div
-				id="g_id_onload"
-				data-client_id="201477670303-t3qm85ov000hfk3konc95jjp36ds1i3k.apps.googleusercontent.com"
-				data-context="signin"
-				data-ux_mode="popup"
-				data-login_uri="auth-callback"
-				data-auto_prompt="false"
-			></div>
-
-			<div
-				className="g_id_signin"
-				data-type="standard"
-				data-shape="rectangular"
-				data-theme="outline"
-				data-text="signin_with"
-				data-size="medium"
-				data-logo_alignment="left"
-			></div>
+				<div
+					className="g_id_signin w-fit"
+					data-type="standard"
+					data-shape="rectangular"
+					data-theme="outline"
+					data-text="signin_with"
+					data-size="medium"
+					data-logo_alignment="left"
+				></div>
+			</div>
 		</div>
 	);
 }

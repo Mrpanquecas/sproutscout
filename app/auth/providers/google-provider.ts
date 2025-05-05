@@ -25,6 +25,7 @@ export default function GoogleProvider({
 		): void => {
 			console.log('EVENT', event);
 			console.log('EVENT ORIGIN', event.origin);
+			// eslint-disable-next-line unicorn/prefer-global-this
 			if (event.origin !== window.location.origin) return;
 
 			console.log('EVENT TYPE', event.data);
@@ -52,11 +53,7 @@ export default function GoogleProvider({
 
 		const authPopup = generatePopup('/api/auth/google');
 
-		if (
-			!authPopup ||
-			authPopup.closed ||
-			typeof authPopup.closed === 'undefined'
-		) {
+		if (!authPopup || authPopup.closed || authPopup.closed === undefined) {
 			cleanup();
 			onError('Popup was blocked by the browser');
 			return;

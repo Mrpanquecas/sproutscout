@@ -9,6 +9,6 @@ export default [
 		route('calendar', 'routes/calendar.tsx'),
 		route('vegetable/:vegetable_id', 'routes/vegetable-details.tsx'),
 		route('auth-callback', 'routes/auth-callback.tsx'),
+		route('login', 'routes/login.tsx'),
 	]),
-	route('login', 'routes/login.tsx'),
 ] satisfies RouteConfig;
