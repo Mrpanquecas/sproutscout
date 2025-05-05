@@ -56,24 +56,26 @@ export default function PageLayout() {
 			<div className="mt-6 p-4 max-w-6xl mx-auto">
 				<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
 					<div className="mt-2 md:mt-0 flex flex-col w-full items-end">
-						<div>
-							<label className="mr-2 text-sm font-medium text-green-700">
-								Climate Zone:
-							</label>
-							<select
-								disabled={isLoading}
-								className="border border-green-300 rounded p-1 bg-white"
-								value={climateZone}
-								onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-									setClimateZone(event.target.value as ClimateTypes)
-								}
-							>
-								{climateZones.map((zone) => (
-									<option key={zone.id} value={zone.id}>
-										{zone.name}
-									</option>
-								))}
-							</select>
+						<div className="flex flex-col items-end">
+							<div>
+								<label className="mr-2 text-sm font-medium text-green-700">
+									Climate Zone:
+								</label>
+								<select
+									disabled={isLoading}
+									className="border border-green-300 rounded p-1 bg-white"
+									value={climateZone}
+									onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+										setClimateZone(event.target.value as ClimateTypes)
+									}
+								>
+									{climateZones.map((zone) => (
+										<option key={zone.id} value={zone.id}>
+											{zone.name}
+										</option>
+									))}
+								</select>
+							</div>
 							<div className="text-xs text-gray-500 mt-1">
 								{climateZones.find((z) => z.id === climateZone)?.description}
 							</div>
