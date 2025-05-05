@@ -2,11 +2,10 @@ import React from 'react';
 import { Outlet, redirect, useNavigate, useNavigation } from 'react-router';
 import { useLocation } from 'react-router';
 
-import { type ClimateTypes, monthNames, climateZones } from '~/utils/constants';
+import { type ClimateTypes, climateZones } from '~/utils/constants';
 import { useGardenStore } from '../store/store';
 import type { Route } from './+types/layout';
 import { authAnonUser } from '~/utils/loader-helpers';
-import { getCurrentMonth } from '~/utils/get-current-month';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const cookieList = request.headers.get('Cookie');
@@ -49,7 +48,7 @@ export default function PageLayout() {
 
 	return (
 		<>
-			<div className="w-screen py-4 bg-green-600">
+			<div className="w-full py-4 bg-green-600">
 				<div className="max-w-6xl mx-auto">
 					<h1 className="text-2xl font-bold text-white">Tometrics</h1>
 				</div>

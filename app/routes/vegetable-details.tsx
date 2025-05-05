@@ -161,7 +161,7 @@ export default function VegetableDetails() {
 				<h3 className="text-xl font-semibold text-green-700 mb-2">
 					Growing Calendar
 				</h3>
-				<div className="overflow-x-auto">
+				<div className="">
 					<CalendarTable vegetables={[data.vegetable]} />
 				</div>
 			</div>
