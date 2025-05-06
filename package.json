@@ -29,6 +29,7 @@
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
     "@types/react-helmet": "^6.1.11",
+    "daisyui": "^5.0.35",
     "eslint": "^9.25.1",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-unicorn": "^58.0.0",

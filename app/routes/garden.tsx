@@ -65,7 +65,7 @@ export default function garden() {
 								return (
 									<div
 										key={id}
-										className="p-4 rounded border bg-white border-green-200"
+										className="p-4 rounded border  border-green-200"
 									>
 										<div className="flex justify-between">
 											<h3 className="text-lg font-medium text-green-700">
@@ -81,7 +81,7 @@ export default function garden() {
 													<input type="hidden" name="id" value={id} />
 													<input
 														placeholder="Quantity"
-														className="w-20"
+														className="input input-sm w-20"
 														name="quantity"
 														required
 														min={1}
@@ -91,7 +91,7 @@ export default function garden() {
 													<button
 														disabled={isLoading}
 														type="submit"
-														className="bg-green-600 text-white px-2 py-1 rounded text-sm"
+														className="btn btn-success btn-sm"
 													>
 														Update
 													</button>
@@ -101,7 +101,7 @@ export default function garden() {
 													<input type="hidden" name="id" value={id} />
 													<button
 														type="submit"
-														className="px-2 py-2 rounded bg-red-100 text-red-700"
+														className="btn btn-error btn-sm"
 														disabled={isLoading}
 													>
 														<TrashIcon className="size-5" />
@@ -111,7 +111,7 @@ export default function garden() {
 													disabled={isLoading}
 													onClick={() => navigate(`/vegetable/${plant.id}`)}
 													type="button"
-													className="bg-cyan-600 text-white px-3 py-1 rounded"
+													className="btn btn-info btn-sm"
 												>
 													<EyeIcon className="size-5" />
 												</button>
@@ -145,10 +145,10 @@ export default function garden() {
 						)}
 					</div>
 					<div className="flex flex-col gap-6 order-first md:order-last">
-						<div className="p-4 rounded border bg-white border-green-200">
+						<div className="p-4 rounded border border-green-200">
 							Garden summary will go here
 						</div>
-						<div className="p-4 rounded border bg-white border-green-200">
+						<div className="p-4 rounded border border-green-200">
 							Diary will go here
 						</div>
 					</div>

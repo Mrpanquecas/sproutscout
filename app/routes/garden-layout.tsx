@@ -153,13 +153,13 @@ export default function layout() {
 
 			<div className="flex flex-col md:flex-row gap-6">
 				<div className="md:w-1/3">
-					<div className="bg-white p-4 rounded border border-gray-200 mb-4">
+					<div className=" p-4 rounded border border-gray-200 mb-4">
 						<h3 className="font-medium text-green-700 mb-2">Garden Settings</h3>
 						<div className="flex gap-2 items-center mb-4">
 							<div>
 								<label className="mr-2 text-sm">Width:</label>
 								<select
-									className="border rounded p-1 text-sm"
+									className="select select-sm"
 									value={gardenSize.width}
 									onChange={(event) => {
 										setGardenSize({
@@ -179,7 +179,7 @@ export default function layout() {
 							<div>
 								<label className="mr-2 text-sm">Height:</label>
 								<select
-									className="border rounded p-1 text-sm"
+									className="select select-sm"
 									value={gardenSize.height}
 									onChange={(event) => {
 										setGardenSize({
@@ -197,30 +197,28 @@ export default function layout() {
 								</select>
 							</div>
 						</div>
-						<p className="text-xs text-gray-500 mb-4">
+						<p className="text-xs  mb-4">
 							Each cell represents approximately 1m² in your garden
 						</p>
 						<button
 							onClick={() => initializeGardenLayout(true)}
-							className="w-full bg-red-100 text-red-700 px-3 py-1 rounded text-sm"
+							className="btn w-full btn-error"
 						>
 							Clear Layout
 						</button>
 					</div>
 
-					<div className="bg-white p-4 rounded border border-gray-200 mb-4">
+					<div className=" p-4 rounded border border-gray-200 mb-4">
 						<h3 className="font-medium text-green-700 mb-2">
 							Select Vegetable to Place
 						</h3>
 						<div className="flex items-center justify-between mb-3">
-							<div className="text-xs text-gray-500">
+							<div className="text-xs ">
 								Select a vegetable to add to your garden
 							</div>
 							<button
-								className={`px-2 py-1 text-xs rounded ${
-									showOnlyInSeason
-										? 'bg-green-600 text-white'
-										: 'bg-gray-200 text-gray-700'
+								className={`btn btn-sm ${
+									showOnlyInSeason ? 'btn-success' : 'btn-neutral'
 								}`}
 								onClick={() => setShowOnlyInSeason(!showOnlyInSeason)}
 							>
@@ -231,15 +229,13 @@ export default function layout() {
 							<div
 								className={`mb-2 p-2 rounded cursor-pointer ${
 									selectedVeggie === null
-										? 'bg-green-100 border border-green-300'
-										: 'hover:bg-gray-100'
+										? 'border border-green-300'
+										: 'hover:bg-green-500'
 								}`}
 								onClick={() => setSelectedVeggie(null)}
 							>
 								<div className="text-sm font-medium">Eraser</div>
-								<div className="text-xs text-gray-500">
-									Remove plants from cells
-								</div>
+								<div className="text-xs ">Remove plants from cells</div>
 							</div>
 							{data.plants
 								?.filter(
@@ -251,8 +247,8 @@ export default function layout() {
 										key={veggie.id}
 										className={`mb-2 p-2 rounded cursor-pointer ${
 											selectedVeggie?.id === veggie.id
-												? 'bg-green-100 border border-green-300'
-												: 'hover:bg-gray-100'
+												? 'border border-green-300'
+												: 'hover:bg-green-500'
 										}`}
 										onClick={() => setSelectedVeggie(veggie)}
 									>
@@ -264,7 +260,7 @@ export default function layout() {
 												</span>
 											)}
 										</div>
-										<div className="text-xs text-gray-500">
+										<div className="text-xs ">
 											Spacing: {getSpacingRecommendation(veggie)}
 										</div>
 									</div>
@@ -272,16 +268,14 @@ export default function layout() {
 						</div>
 					</div>
 
-					<div className="bg-white p-4 rounded border border-gray-200">
+					<div className=" p-4 rounded border border-gray-200">
 						<h3 className="font-medium text-green-700 mb-2">Garden Summary</h3>
 						<div className="text-sm">
 							<p>Total Area: {gardenSize.width * gardenSize.height} m²</p>
 							<div className="mt-2">
 								<p className="font-medium">Plants Used:</p>
 								{Object.entries(calculateGardenUsage()).length === 0 ? (
-									<p className="text-gray-500 text-xs italic">
-										No plants placed yet
-									</p>
+									<p className=" text-xs italic">No plants placed yet</p>
 								) : (
 									<ul className="list-disc pl-5 text-xs mt-1">
 										{Object.entries(calculateGardenUsage()).map(
@@ -299,10 +293,10 @@ export default function layout() {
 				</div>
 
 				<div className="md:w-2/3">
-					<div className="bg-white p-4 rounded border border-gray-200">
+					<div className=" p-4 rounded border border-gray-200">
 						<div className="mb-3 flex items-center justify-between">
 							<h3 className="font-medium text-green-700">Garden Grid</h3>
-							<div className="text-xs text-gray-500">
+							<div className="text-xs ">
 								{selectedVeggie
 									? `Selected: ${selectedVeggie.name}`
 									: 'Click a cell to place selected vegetable'}
@@ -365,7 +359,7 @@ export default function layout() {
 												{editingNoteCell &&
 													editingNoteCell.x === x &&
 													editingNoteCell.y === y && (
-														<div className="absolute inset-0 bg-white bg-opacity-90 p-1 z-10">
+														<div className="absolute inset-0  bg-opacity-90 p-1 z-10">
 															<textarea
 																className="w-full h-full text-xs resize-none border border-blue-300 rounded p-1"
 																value={currentNote}
@@ -394,7 +388,7 @@ export default function layout() {
 							</div>
 						</div>
 
-						<div className="text-xs text-gray-500 flex justify-between">
+						<div className="text-xs  flex justify-between">
 							<div>Single click: Place/remove plant</div>
 							<div>Double click: Add a note</div>
 						</div>

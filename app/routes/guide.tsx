@@ -45,16 +45,16 @@ export default function guide() {
 			<div className="mb-4 flex justify-between items-center">
 				<h2 className="text-xl text-green-700">Vegetables Guide</h2>
 			</div>
-			<div className="mb-2 flex gap-4">
+			<div className="mb-4 flex gap-4">
 				<input
-					className="border border-gray-400 px-2 rounded-sm"
+					className="input"
 					placeholder="Filter"
 					type="text"
 					onChange={(e) => setFilter(e.target.value.toLowerCase())}
 				/>
 				<button
 					disabled={isLoading}
-					className={'px-3 py-1 text-sm rounded bg-green-600 text-white'}
+					className={'btn btn-success'}
 					onClick={() => setShowOnlyInSeason(!showOnlyInSeason)}
 				>
 					{showOnlyInSeason ? 'Show all' : 'Show only in season'}
@@ -71,40 +71,36 @@ export default function guide() {
 						<Form key={veggie.id} method="POST" className="flex">
 							<div
 								className={
-									'p-4 rounded border flex flex-col justify-between grow border-gray-300 bg-white'
+									'p-4 rounded border flex flex-col gap-2 justify-between grow border-gray-300'
 								}
 							>
 								<div className="flex justify-between items-start">
 									<h3 className="text-lg font-medium">{veggie.name}</h3>
 									{isInSeason(veggie, climateZone) && (
-										<span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-											In season!
-										</span>
+										<span className="badge badge-success">In season!</span>
 									)}
 								</div>
 								<div className="mt-2 space-y-1 text-sm">
 									<p>
-										<span className="text-gray-500">Time to Harvest: </span>
+										<span>Time to Harvest: </span>
 										{veggie.timeToHarvest} days
 									</p>
 									<p>
-										<span className="text-gray-500">Yield per Plant: </span>
+										<span>Yield per Plant: </span>
 										{formatYield(veggie.yieldPerPlant)}
 									</p>
 									<p>
-										<span className="text-gray-500">Yield per Area: </span>
+										<span>Yield per Area: </span>
 										{formatYield(veggie.yieldPerSqM)}
 									</p>
 									<p>
-										<span className="text-gray-500">
-											Best Planting Months:{' '}
-										</span>
+										<span>Best Planting Months: </span>
 										{veggie.climateZones[climateZone]
 											.map((m) => monthNames[m - 1]?.slice(0, 3))
 											.join(', ')}
 									</p>
 									<p>
-										<span className="text-gray-500">Companion Plants:</span>{' '}
+										<span>Companion Plants:</span>{' '}
 										{veggie.companionPlants.join(', ')}
 									</p>
 								</div>
@@ -112,7 +108,7 @@ export default function guide() {
 									<input type="hidden" name="id" value={veggie.id} />
 									<input
 										placeholder="Quantity"
-										className="w-20"
+										className="input input-sm w-20"
 										name="quantity"
 										min={1}
 										type="number"
@@ -121,7 +117,7 @@ export default function guide() {
 									<button
 										disabled={isLoading}
 										type="submit"
-										className="mt-3 bg-green-600 text-white px-3 py-1 rounded text-sm"
+										className="btn btn-success btn-sm"
 									>
 										Add to My Garden
 									</button>
@@ -129,7 +125,7 @@ export default function guide() {
 										disabled={isLoading}
 										onClick={() => navigate(`/vegetable/${veggie.id}`)}
 										type="button"
-										className="mt-3 bg-cyan-600 text-white px-3 py-1 rounded text-sm"
+										className="btn btn-info btn-sm"
 									>
 										See details
 									</button>

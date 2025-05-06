@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate, useNavigation } from 'react-router';
 import { useGardenStore } from '~/store/store';
-import { climateZones } from '~/utils/constants';
+import { climateZones, type ClimateTypes } from '~/utils/constants';
 
 export function Menu() {
 	const { climateZone, setClimateZone } = useGardenStore();
@@ -17,13 +17,13 @@ export function Menu() {
 			<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
 				<div className="mt-2 md:mt-0 flex flex-col w-full items-end">
 					<div className="flex flex-col items-end">
-						<div>
-							<label className="mr-2 text-sm font-medium text-green-700">
+						<div className="flex items-center">
+							<label className="mr-2 text-sm font-medium text-green-700 whitespace-nowrap">
 								Climate Zone:
 							</label>
 							<select
 								disabled={isLoading}
-								className="border border-green-300 rounded p-1 bg-white"
+								className="select select-sm"
 								value={climateZone}
 								onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
 									setClimateZone(event.target.value as ClimateTypes)

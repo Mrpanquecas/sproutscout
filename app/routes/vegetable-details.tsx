@@ -178,7 +178,7 @@ export default function VegetableDetails() {
 					<input
 						disabled={isLoading}
 						placeholder="Quantity"
-						className="w-20"
+						className="input w-20"
 						name="quantity"
 						min={1}
 						type="number"
