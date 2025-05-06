@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGardenStore } from '../store/store';
 import { climateZones } from '~/utils/constants';
 import { useLoaderData } from 'react-router';
@@ -13,6 +13,8 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function calendar() {
 	const data = useLoaderData<typeof loader>();
+	const [filter, setFilter] = useState<string>('');
+
 	const { climateZone } = useGardenStore();
 
 	return (
@@ -26,7 +28,19 @@ export default function calendar() {
 			</div>
 
 			<div className="overflow-x-auto">
-				<CalendarTable vegetables={data.plants || []} />
+				<input
+					className="input mb-2"
+					placeholder="Filter"
+					type="text"
+					onChange={(e) => setFilter(e.target.value.toLowerCase())}
+				/>
+				<CalendarTable
+					vegetables={
+						data.plants?.filter((veggie) =>
+							veggie.name.toLocaleLowerCase().includes(filter)
+						) || []
+					}
+				/>
 			</div>
 
 			<div className="flex justify-center gap-6 mt-4">
