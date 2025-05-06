@@ -27,13 +27,13 @@ export default function calendar() {
 				</p>
 			</div>
 
+			<input
+				className="input mb-2"
+				placeholder="Filter"
+				type="text"
+				onChange={(e) => setFilter(e.target.value.toLowerCase())}
+			/>
 			<div className="overflow-x-auto">
-				<input
-					className="input mb-2"
-					placeholder="Filter"
-					type="text"
-					onChange={(e) => setFilter(e.target.value.toLowerCase())}
-				/>
 				<CalendarTable
 					vegetables={
 						data.plants?.filter((veggie) =>

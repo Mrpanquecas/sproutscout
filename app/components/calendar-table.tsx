@@ -12,11 +12,11 @@ export default function CalendarTable({ vegetables }: CalendarTableProps) {
 	const { climateZone } = useGardenStore();
 
 	return (
-		<table className="table">
+		<table className="table table-xs table-pin-rows table-pin-cols">
 			<thead>
 				<tr>
 					<th className="py-2 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-						Vegetable
+						Name
 					</th>
 					{monthNames.map((month) => (
 						<th
