@@ -1,11 +1,20 @@
 import React from 'react';
-import { Link, Outlet, redirect, useLocation, useNavigate } from 'react-router';
+import {
+	Link,
+	Outlet,
+	useLocation,
+	useNavigate,
+	useLoaderData,
+} from 'react-router';
 import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie';
 
 import type { Route } from './+types/layout';
 import { authAnonUser } from '~/utils/loader-helpers';
 import { UserIcon } from '@heroicons/react/16/solid';
 import { Menu } from '~/components/menu';
+import { checkLoginStatus } from '~/utils/check-login-status';
+import type { DecodedToken } from '~/types/types';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const cookieList = request.headers.get('Cookie');
@@ -14,11 +23,24 @@ export async function loader({ request }: Route.LoaderArgs) {
 		cookieList.includes('access-token') &&
 		cookieList.includes('refresh-token');
 
-	if (hasAuthCookies) return {};
+	if (hasAuthCookies) {
+		const token = cookieList
+			?.split('; ')
+			.find((row) => row.startsWith('access-token='))
+			?.split('=')[1];
+		if (token) {
+			try {
+				const decoded = jwtDecode<DecodedToken>(token);
+				return { isLoggedIn: true, isAnon: decoded.anon };
+			} catch {
+				return { isLoggedIn: false };
+			}
+		}
+	}
 
 	const tokens = await authAnonUser();
 
-	if (!tokens) return {};
+	if (!tokens) return { isLoggedIn: false };
 
 	const headers = new Headers();
 	headers.append(
@@ -32,14 +54,19 @@ export async function loader({ request }: Route.LoaderArgs) {
 		}; SameSite=Lax`
 	);
 
-	return redirect(request.url, {
-		headers,
-	});
+	return { isLoggedIn: true, isAnon: true, headers };
 }
 
 export default function PageLayout() {
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
+	const { isLoggedIn, isAnon } = useLoaderData<typeof loader>();
+
+	const handleLogout = () => {
+		Cookies.remove('access-token');
+		Cookies.remove('refresh-token');
+		navigate('/', { replace: true });
+	};
 
 	return (
 		<>
@@ -51,10 +78,19 @@ export default function PageLayout() {
 						</h1>
 					</div>
 					<div className="navbar-end">
-						<UserIcon
-							onClick={() => navigate('/login')}
-							className="size-6 text-white cursor-pointer"
-						/>
+						{checkLoginStatus({ isLoggedIn, isAnon }) ? (
+							<button onClick={handleLogout} className="btn btn-sm btn-ghost">
+								<UserIcon className="size-4 text-white" />
+								Logout
+							</button>
+						) : (
+							<button
+								onClick={() => navigate('/login')}
+								className="btn btn-sm btn-ghost"
+							>
+								<UserIcon className="size-4 text-white" /> Login
+							</button>
+						)}
 					</div>
 				</div>
 			</div>
