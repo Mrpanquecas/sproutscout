@@ -5,7 +5,6 @@ import {
 	useLocation,
 	useNavigate,
 	useLoaderData,
-	redirect,
 } from 'react-router';
 import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';

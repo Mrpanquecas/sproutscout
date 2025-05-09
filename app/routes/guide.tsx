@@ -123,7 +123,7 @@ export default function guide() {
 									</button>
 									<button
 										disabled={isLoading}
-										onClick={() => navigate(`/vegetable/${veggie.id}`)}
+										onClick={() => navigate(`/plant/${veggie.id}`)}
 										type="button"
 										className="btn btn-info btn-sm"
 									>

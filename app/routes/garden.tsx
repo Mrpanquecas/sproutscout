@@ -2,7 +2,7 @@ import React from 'react';
 import { monthNames } from '~/types/garden';
 import type { Route } from './+types/garden';
 import { getGarden } from '~/utils/loader-helpers';
-import { Form, useLoaderData, useNavigate, useNavigation } from 'react-router';
+import { Form, useLoaderData, useNavigation } from 'react-router';
 import {
 	deletePlanting,
 	updateDiary,
@@ -35,15 +35,21 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function Garden() {
+	const [viewingDiary, setViewingDiary] = React.useState<number | null>(null);
+	const [diaryValue, setDiaryValue] =
+		React.useState<string>('No diary entry yet');
 	const data = useLoaderData<typeof loader>();
 	const navigation = useNavigation();
-	const navigate = useNavigate();
 
 	const isLoading =
 		navigation.state === 'loading' || navigation.state === 'submitting';
 
-	const handleViewDetails = (id: string): void => {
-		navigate(`/plants/${id}`);
+	const handleViewDiary = (id: number): void => {
+		setViewingDiary(id);
+		setDiaryValue(
+			data.garden?.plantings?.find((p) => p.id === id)?.diary ||
+				'No diary entry yet'
+		);
 	};
 
 	return (
@@ -69,7 +75,7 @@ export default function Garden() {
 									key={planting.id}
 									{...planting}
 									isLoading={isLoading}
-									onViewDetails={handleViewDetails}
+									onViewDiary={handleViewDiary}
 								/>
 							))}
 						</div>
@@ -77,28 +83,34 @@ export default function Garden() {
 							<div className="p-4 rounded border border-green-200">
 								Garden Summary
 							</div>
-							<Form method="POST" className="flex flex-col gap-2">
-								<input
-									type="hidden"
-									name="id"
-									value={data.garden?.plantings[0]?.id}
-								/>
-								<input type="hidden" name="intent" value="update-diary" />
-								<textarea
-									name="diary"
-									className="textarea textarea-bordered w-full field-sizing-content"
-									defaultValue={
-										data.garden?.plantings[0]?.diary || 'No diary entry yet'
-									}
-								/>
-								<button
-									type="submit"
-									className="btn btn-sm btn-success"
-									disabled={isLoading}
-								>
-									Save Diary
-								</button>
-							</Form>
+							{viewingDiary !== null && (
+								<Form method="POST" className="flex flex-col gap-2">
+									<input
+										type="hidden"
+										name="id"
+										value={
+											data.garden?.plantings?.find((p) => p.id === viewingDiary)
+												?.id
+										}
+									/>
+									<input type="hidden" name="intent" value="update-diary" />
+									<textarea
+										name="diary"
+										className="textarea textarea-bordered w-full field-sizing-content"
+										onChange={(e) => {
+											setDiaryValue(e.currentTarget.value);
+										}}
+										value={diaryValue}
+									/>
+									<button
+										type="submit"
+										className="btn btn-sm btn-success"
+										disabled={isLoading}
+									>
+										Save Diary
+									</button>
+								</Form>
+							)}
 						</div>
 					</div>
 				)}

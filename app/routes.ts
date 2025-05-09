@@ -7,7 +7,7 @@ export default [
 		route('layout', 'routes/garden-layout.tsx'),
 		route('guide', 'routes/guide.tsx'),
 		route('calendar', 'routes/calendar.tsx'),
-		route('vegetable/:vegetable_id', 'routes/vegetable-details.tsx'),
+		route('plant/:plant_id', 'routes/plant-details.tsx'),
 		route('auth-callback', 'routes/auth-callback.tsx'),
 		route('login', 'routes/login.tsx'),
 	]),

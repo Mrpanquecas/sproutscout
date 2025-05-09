@@ -1,14 +1,12 @@
 import React from 'react';
-import type { Route } from './+types/vegetable-details';
+import type { Route } from './+types/plant-details';
 import {
 	growingTipDescriptions,
-	monthNames,
 	plantGrowthHabitDescriptions,
 	soilTypeDescriptions,
 	spacingRequirementDescriptions,
 	sunlightRequirementDescriptions,
 	waterRequirementDescriptions,
-	type Vegetable,
 } from '~/utils/constants';
 import {
 	Form,
@@ -23,14 +21,12 @@ import { addPlanting } from '~/utils/action-helpers';
 import { useGardenStore } from '~/store/store';
 import CalendarTable from '~/components/calendar-table';
 import { ArrowLeftIcon } from '@heroicons/react/16/solid';
+import { monthNames, type Vegetable } from '~/types/garden';
 
 export async function loader({ params, request }: Route.LoaderArgs) {
-	const vegetable: Vegetable = await getVegetableDetails(
-		request,
-		params.vegetable_id
-	);
+	const plant: Vegetable = await getVegetableDetails(request, params.plant_id);
 
-	return { vegetable };
+	return { plant };
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -42,7 +38,7 @@ export async function action({ request }: Route.ActionArgs) {
 	}
 }
 
-export default function VegetableDetails() {
+export default function PlantDetails() {
 	const { climateZone } = useGardenStore();
 	const data = useLoaderData<typeof loader>();
 
@@ -52,36 +48,36 @@ export default function VegetableDetails() {
 	const isLoading =
 		navigation.state === 'loading' || navigation.state === 'submitting';
 
-	if (!data.vegetable) return <></>;
+	if (!data.plant) return <></>;
 	return (
 		<div>
 			<div className="flex justify-between items-start mb-6">
 				<div>
 					<h2 className="text-2xl font-bold text-green-700">
-						{data.vegetable.name}
+						{data.plant.name}
 					</h2>
 				</div>
 
 				<div className="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">
-					Harvest in {data.vegetable.timeToHarvest} days
+					Harvest in {data.plant.timeToHarvest} days
 				</div>
 			</div>
 
 			<div>
 				<div className="flex justify-between mb-4 gap-2 flex-wrap">
 					<button
-						onClick={() => navigate('/guide')}
-						className="btn btn-primary"
+						onClick={() => navigate(-1)}
+						className="btn btn-sm btn-primary"
 					>
 						<ArrowLeftIcon className="size-4" />
 						Back
 					</button>
 					<Form className="flex gap-2" method="POST">
-						<input type="hidden" name="id" value={data.vegetable.id} />
+						<input type="hidden" name="id" value={data.plant.id} />
 						<input
 							disabled={isLoading}
 							placeholder="Quantity"
-							className="input w-40"
+							className="input input-sm w-20"
 							name="quantity"
 							min={1}
 							type="number"
@@ -90,7 +86,7 @@ export default function VegetableDetails() {
 						<button
 							disabled={isLoading}
 							type="submit"
-							className="px-4 py-2 bg-green-600 text-white rounded"
+							className="btn btn-sm btn-success"
 						>
 							Add
 						</button>
@@ -103,7 +99,7 @@ export default function VegetableDetails() {
 					Description
 				</h3>
 				<p className="text-sm">
-					{plantGrowthHabitDescriptions[data.vegetable.growthHabit]}
+					{plantGrowthHabitDescriptions[data.plant.growthHabit]}
 				</p>
 			</div>
 
@@ -115,21 +111,19 @@ export default function VegetableDetails() {
 					<ul className="space-y-2">
 						<li>
 							<span className="font-medium">Spacing:</span>{' '}
-							{spacingRequirementDescriptions[data.vegetable.spacing]}
+							{spacingRequirementDescriptions[data.plant.spacing]}
 						</li>
 						<li>
 							<span className="font-medium">Sunlight:</span>{' '}
-							{sunlightRequirementDescriptions[data.vegetable.sunlight]}
+							{sunlightRequirementDescriptions[data.plant.sunlight]}
 						</li>
 						<li>
 							<span className="font-medium">Soil:</span>{' '}
-							{data.vegetable.soilType.map(
-								(soil) => soilTypeDescriptions[soil]
-							)}
+							{data.plant.soilType.map((soil) => soilTypeDescriptions[soil])}
 						</li>
 						<li>
 							<span className="font-medium">Water:</span>{' '}
-							{waterRequirementDescriptions[data.vegetable.waterRequirement]}
+							{waterRequirementDescriptions[data.plant.waterRequirement]}
 						</li>
 					</ul>
 				</div>
@@ -141,19 +135,19 @@ export default function VegetableDetails() {
 					<ul className="space-y-2">
 						<li>
 							<span className="font-medium">Yield per Plant: </span>
-							{formatYield(data.vegetable.yieldPerPlant)}
+							{formatYield(data.plant.yieldPerPlant)}
 						</li>
 						<li>
 							<span className="font-medium">Yield per Area: </span>
-							{formatYield(data.vegetable.yieldPerSqM)}
+							{formatYield(data.plant.yieldPerSqM)}
 						</li>
 						<li>
 							<span className="font-medium">Days to Harvest:</span>{' '}
-							{data.vegetable.timeToHarvest}
+							{data.plant.timeToHarvest}
 						</li>
 						<li>
 							<span className="font-medium">Best Months:</span>{' '}
-							{data.vegetable.climateZones[climateZone]
+							{data.plant.climateZones[climateZone]
 								.map((m) => monthNames[m - 1]?.slice(0, 3))
 								.join(', ')}
 						</li>
@@ -166,7 +160,7 @@ export default function VegetableDetails() {
 					Companion Plants
 				</h3>
 				<div className="flex flex-wrap gap-2">
-					{data.vegetable.companionPlants.map((plant, index) => (
+					{data.plant.companionPlants.map((plant, index) => (
 						<span
 							key={index}
 							className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
@@ -182,7 +176,7 @@ export default function VegetableDetails() {
 					Growing Tips
 				</h3>
 				<ul className="list-disc pl-5 space-y-1">
-					{data.vegetable.growingTips?.map((tip, index) => (
+					{data.plant.growingTips?.map((tip, index) => (
 						<li key={index}>{growingTipDescriptions[tip]}</li>
 					))}
 				</ul>
@@ -193,7 +187,7 @@ export default function VegetableDetails() {
 					Growing Calendar
 				</h3>
 				<div className="">
-					<CalendarTable vegetables={[data.vegetable]} />
+					<CalendarTable vegetables={[data.plant]} />
 				</div>
 			</div>
 		</div>

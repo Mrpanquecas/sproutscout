@@ -76,7 +76,7 @@ export type PlantYield = {
 };
 
 export type GardenEntry = {
-	id: string;
+	id: number;
 	plant: Vegetable;
 	createdAt: number;
 	totalYield: PlantYield;

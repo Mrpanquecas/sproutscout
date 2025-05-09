@@ -1,14 +1,14 @@
 import React from 'react';
-import { EyeIcon, TrashIcon } from '@heroicons/react/16/solid';
+import { DocumentTextIcon, TrashIcon } from '@heroicons/react/16/solid';
 import { formatDate } from '../utils/format-date';
 import { calculateTimeToHarvest } from '../utils/calculate-time-to-harvest';
 import { formatYield } from '../utils/format-yield';
 import type { GardenEntry } from '~/types/garden';
-import { Form } from 'react-router';
+import { Form, Link } from 'react-router';
 
 type PlantingCardProps = GardenEntry & {
 	isLoading: boolean;
-	onViewDetails: (id: string) => void;
+	onViewDiary: (id: number) => void;
 };
 
 export function PlantingCard({
@@ -19,14 +19,16 @@ export function PlantingCard({
 	quantity,
 	readyToHarvestAt,
 	isLoading,
-	onViewDetails,
+	onViewDiary,
 }: PlantingCardProps) {
 	const plantDate = formatDate(new Date(createdAt));
 
 	return (
 		<div className="p-4 rounded border border-green-200">
 			<div className="flex justify-between">
-				<h3 className="text-lg font-medium text-green-700">{plant.name}</h3>
+				<h3 className="text-lg font-medium text-green-700 cursor-pointer">
+					<Link to={`/plant/${plant.id}`}>{plant.name}</Link>
+				</h3>
 				<div className="flex gap-2">
 					<Form method="POST" className="flex gap-2">
 						<input type="hidden" name="intent" value="change-quantity" />
@@ -61,12 +63,12 @@ export function PlantingCard({
 						</button>
 					</Form>
 					<button
-						onClick={() => onViewDetails(String(plant.id))}
+						onClick={() => onViewDiary(id)}
 						type="button"
 						className="btn btn-info btn-sm"
 						disabled={isLoading}
 					>
-						<EyeIcon className="size-5" />
+						<DocumentTextIcon className="size-5" />
 					</button>
 				</div>
 			</div>
