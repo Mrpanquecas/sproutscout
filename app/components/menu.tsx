@@ -43,47 +43,35 @@ export function Menu() {
 				</div>
 			</div>
 
-			<div className="flex flex-wrap mb-4 border-b border-gray-300">
+			<div role="tablist" className="tabs tabs-border mb-4">
 				<button
+					role="tab"
 					disabled={isLoading}
-					className={`px-4 py-2 ${
-						pathname === '/'
-							? 'text-green-700 border-b-2 border-green-700 font-semibold'
-							: 'text-gray-600'
-					}`}
+					className={`tab ${pathname === '/' && 'tab-active'}`}
 					onClick={() => navigate('/')}
 				>
 					My Garden
 				</button>
 				<button
+					role="tab"
 					disabled={isLoading}
-					className={`px-4 py-2 ${
-						pathname === '/layout'
-							? 'text-green-700 border-b-2 border-green-700 font-semibold'
-							: 'text-gray-600'
-					}`}
+					className={`tab ${pathname === '/layout' && 'tab-active'}`}
 					onClick={() => navigate('/layout')}
 				>
 					Garden Designer
 				</button>
 				<button
+					role="tab"
 					disabled={isLoading}
-					className={`px-4 py-2 ${
-						pathname === '/guide'
-							? 'text-green-700 border-b-2 border-green-700 font-semibold'
-							: 'text-gray-600'
-					}`}
+					className={`tab ${pathname === '/guide' && 'tab-active'}`}
 					onClick={() => navigate('/guide')}
 				>
 					Veggie Guide
 				</button>
 				<button
+					role="tab"
 					disabled={isLoading}
-					className={`px-4 py-2 ${
-						pathname === '/calendar'
-							? 'text-green-700 border-b-2 border-green-700 font-semibold'
-							: 'text-gray-600'
-					}`}
+					className={`tab ${pathname === '/calendar' && 'tab tab-active'}`}
 					onClick={() => navigate('/calendar')}
 				>
 					Planting Calendar

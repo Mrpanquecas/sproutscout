@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, Outlet, redirect, useLocation, useNavigate } from 'react-router';
+import { jwtDecode } from 'jwt-decode';
 
 import type { Route } from './+types/layout';
 import { authAnonUser } from '~/utils/loader-helpers';
@@ -42,12 +43,14 @@ export default function PageLayout() {
 
 	return (
 		<>
-			<div className="w-full p-4 bg-green-600">
-				<div className="max-w-6xl mx-auto flex items-center justify-between">
-					<h1 className="text-2xl font-bold text-white cursor-pointer">
-						<Link to="/">Tometrics</Link>
-					</h1>
-					<div>
+			<div className="w-full flex justify-center bg-green-600">
+				<div className="navbar max-w-6xl text-neutral-content bg-green-600">
+					<div className="navbar-start">
+						<h1 className="text-2xl font-bold text-white cursor-pointer">
+							<Link to="/">Tometrics</Link>
+						</h1>
+					</div>
+					<div className="navbar-end">
 						<UserIcon
 							onClick={() => navigate('/login')}
 							className="size-6 text-white cursor-pointer"

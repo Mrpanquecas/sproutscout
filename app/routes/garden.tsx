@@ -47,7 +47,7 @@ export default function garden() {
 			{data.garden?.plantings.length === 0 ? (
 				<div className="text-center py-8 text-gray-500">
 					<p>You haven&apos;t added any plantings yet.</p>
-					<p>Click &quot;Add Random Veggie&quot; to get started!</p>
+					<p>Click &quot;Veggie Guide&quot; and add some!</p>
 				</div>
 			) : (
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
