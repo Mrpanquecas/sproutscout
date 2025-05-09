@@ -1,17 +1,15 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import type {
-	ClimateTypes,
-	GardenLayout,
-	GardenSize,
-	PlantedVegetable,
-} from '~/utils/constants';
+import type { ClimateTypes } from '~/types/garden';
+import type { GardenEntry } from '~/types/garden';
+import type { GardenLayout } from '~/types/garden';
+import type { GardenSize } from '~/types/garden';
 
 interface GardenState {
 	climateZone: ClimateTypes;
 	setClimateZone: (climate: ClimateTypes) => void;
-	plantedPlants: PlantedVegetable[];
-	setPlantedPlants: (plant: PlantedVegetable[]) => void;
+	plantedPlants: GardenEntry[];
+	setPlantedPlants: (plant: GardenEntry[]) => void;
 	gardenLayout: GardenLayout;
 	setGardenLayout: (layout: GardenLayout) => void;
 	gardenSize: GardenSize;
@@ -27,7 +25,7 @@ export const useGardenStore = create<GardenState>()(
 				climateZone: 'temperate',
 				setClimateZone: (climate) => set({ climateZone: climate }),
 				plantedPlants: [],
-				setPlantedPlants: (vetables) => set({ plantedPlants: vetables }),
+				setPlantedPlants: (plants) => set({ plantedPlants: plants }),
 				gardenLayout: [],
 				setGardenLayout: (layout) => set({ gardenLayout: layout }),
 				gardenSize: { width: 6, height: 4 },

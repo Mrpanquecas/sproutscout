@@ -1,6 +1,5 @@
 import React from 'react';
 import { useGardenStore } from '~/store/store';
-import { climateZones, monthNames } from '~/utils/constants';
 import { useState } from 'react';
 import { isInSeason } from '../utils/in-season';
 import {
@@ -14,6 +13,7 @@ import type { Route } from './+types/guide';
 import { getGarden, getVegetables } from '~/utils/loader-helpers';
 import { formatYield } from '~/utils/format-yield';
 import { addPlanting } from '~/utils/action-helpers';
+import { monthNames } from '~/types/garden';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const plantsRequest = await getVegetables(request);

@@ -52,6 +52,34 @@ export async function updateQuantity(
 	}
 }
 
+export async function updateDiary(
+	request: Request,
+	formData: FormData
+): Promise<void> {
+	const cookieList = request.headers.get('Cookie');
+	if (!cookieList) return;
+
+	const accessToken = getCookieValue(cookieList, 'access-token');
+
+	const plantingId = formData.get('id');
+	const newDiary = formData.get('diary');
+
+	const payload = JSON.stringify({ newDiary });
+
+	try {
+		await fetch(`${process.env.API_URL}/api/v1/planting/${plantingId}`, {
+			method: 'PATCH',
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				'content-type': 'application/json',
+			},
+			body: payload,
+		});
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 export async function addPlanting(request: Request): Promise<void> {
 	const formData = await request.formData();
 	const quantity = formData.get('quantity');

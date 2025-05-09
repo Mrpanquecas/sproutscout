@@ -5,6 +5,7 @@ import {
 	useLocation,
 	useNavigate,
 	useLoaderData,
+	redirect,
 } from 'react-router';
 import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
@@ -39,6 +40,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 	}
 
 	const tokens = await authAnonUser();
+	console.log(tokens);
 
 	if (!tokens) return { isLoggedIn: false };
 
@@ -54,7 +56,12 @@ export async function loader({ request }: Route.LoaderArgs) {
 		}; SameSite=Lax`
 	);
 
-	return { isLoggedIn: true, isAnon: true, headers };
+	return new Response(
+		JSON.stringify({ success: true, isLoggedIn: true, isAnon: true }),
+		{
+			headers,
+		}
+	);
 }
 
 export default function PageLayout() {

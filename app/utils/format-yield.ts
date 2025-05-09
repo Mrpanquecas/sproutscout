@@ -1,7 +1,9 @@
-import { unitType, type PlantYield } from './constants';
+import { unitType } from './constants';
 
-export const formatYield = (plantYield: PlantYield) => {
-	return `${plantYield.from} ${unitType[plantYield.unit]} - ${plantYield.to} ${
-		unitType[plantYield.unit]
-	}`;
+export const formatYield = (plantYield: { from: number; to: number; unit: keyof typeof unitType }) => {
+	const fromValue = plantYield.from;
+	const toValue = plantYield.to;
+	const unitSymbol = unitType[plantYield.unit];
+	
+	return `${fromValue} ${unitSymbol} - ${toValue} ${unitSymbol}`;
 };

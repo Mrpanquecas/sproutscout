@@ -1,7 +1,8 @@
 import React from 'react';
 import { useLocation, useNavigate, useNavigation } from 'react-router';
 import { useGardenStore } from '~/store/store';
-import { climateZones, type ClimateTypes } from '~/utils/constants';
+import type { ClimateTypes } from '~/types/garden';
+import { climateZones } from '~/utils/constants';
 
 export function Menu() {
 	const { climateZone, setClimateZone } = useGardenStore();

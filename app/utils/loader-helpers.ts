@@ -1,4 +1,4 @@
-import type { Garden, Vegetable } from './constants';
+import type { Garden, Vegetable } from '~/types/garden';
 import { getCookieValue } from './cookie-util';
 
 export async function getGarden(request: Request): Promise<Garden | undefined> {
