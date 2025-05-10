@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-	DocumentTextIcon,
 	TrashIcon,
 	PlusIcon,
 	EllipsisVerticalIcon,
@@ -14,10 +13,10 @@ import { DeletePlantingModal } from './delete-planting-modal';
 import { UpdateQuantityModal } from './update-quantity-modal';
 import { UpdateHarvestModal } from './update-harvest-modal';
 import { Card, CardBody, CardTitle } from './card';
+import { PlantingSummary } from './planting-summary';
 
 type PlantingCardProps = GardenEntry & {
 	isLoading: boolean;
-	onViewDiary: (id: number) => void;
 };
 
 export function PlantingCard({
@@ -28,7 +27,7 @@ export function PlantingCard({
 	quantity,
 	readyToHarvestAt,
 	isLoading,
-	onViewDiary,
+	diary,
 }: PlantingCardProps) {
 	const plantDate = formatDate(new Date(createdAt));
 
@@ -59,16 +58,6 @@ export function PlantingCard({
 										disabled={isLoading}
 									>
 										<TrashIcon className="size-4" /> Delete Plant
-									</button>
-								</li>
-								<li>
-									<button
-										onClick={() => onViewDiary(id)}
-										type="button"
-										className="btn btn-info btn-block"
-										disabled={isLoading}
-									>
-										<DocumentTextIcon className="size-4" /> View Summary
 									</button>
 								</li>
 								<li>
@@ -130,6 +119,15 @@ export function PlantingCard({
 							from: Number(totalYield.from),
 							to: Number(totalYield.to),
 						})}
+					</div>
+				</div>
+				<div tabIndex={0} className="collapse collapse-arrow">
+					<input type="checkbox" className="peer" />
+					<div className="collapse-title text-lg font-medium px-0 w-24">
+						Diary
+					</div>
+					<div className="collapse-content px-0">
+						<PlantingSummary diary={diary} isLoading={isLoading} id={id} />
 					</div>
 				</div>
 			</CardBody>

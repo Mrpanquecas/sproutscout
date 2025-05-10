@@ -10,7 +10,6 @@ import {
 } from '~/utils/action-helpers';
 import { getCurrentMonth } from '~/utils/get-current-month';
 import { PlantingCard } from '../components/planting-card';
-import { PlantingSummary } from '~/components/planting-summary';
 import GardenWeather from '~/components/garden-weather';
 import geoip from 'geoip-lite';
 import { Card, CardBody } from '~/components/card';
@@ -54,18 +53,11 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function Garden() {
-	const [currentDiary, setCurrentDiary] = React.useState<number | null>(null);
-	const [diaryValue, setDiaryValue] = React.useState<string | undefined>();
 	const data = useLoaderData<typeof loader>();
 	const navigation = useNavigation();
 
 	const isLoading =
 		navigation.state === 'loading' || navigation.state === 'submitting';
-
-	const handleViewDiary = (id: number): void => {
-		setCurrentDiary(id);
-		setDiaryValue(data.garden?.plantings?.find((p) => p.id === id)?.diary);
-	};
 
 	return (
 		<div>
@@ -97,19 +89,11 @@ export default function Garden() {
 									key={planting.id}
 									{...planting}
 									isLoading={isLoading}
-									onViewDiary={handleViewDiary}
 								/>
 							))}
 						</div>
 						<div className="space-y-4">
 							<GardenWeather />
-							<PlantingSummary
-								currentDiary={currentDiary}
-								data={data.garden.plantings}
-								setDiaryValue={setDiaryValue}
-								diaryValue={diaryValue}
-								isLoading={isLoading}
-							/>
 						</div>
 					</div>
 				)}
