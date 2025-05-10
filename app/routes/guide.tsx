@@ -14,6 +14,7 @@ import { getGarden, getVegetables } from '~/utils/loader-helpers';
 import { formatYield } from '~/utils/format-yield';
 import { addPlanting } from '~/utils/action-helpers';
 import { monthNames } from '~/types/garden';
+import { Card, CardActions, CardBody, CardTitle } from '~/components/card';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const plantsRequest = await getVegetables(request);
@@ -68,18 +69,16 @@ export default function guide() {
 							veggie.name.toLocaleLowerCase().includes(filter)
 					)
 					.map((veggie) => (
-						<Form key={veggie.id} method="POST" className="flex">
-							<div
-								className={
-									'p-4 rounded border flex flex-col gap-2 justify-between grow border-gray-300'
-								}
-							>
-								<div className="flex justify-between items-start">
+						<Card key={veggie.id}>
+							<CardBody>
+								<CardTitle>
 									<h3 className="text-lg font-medium">{veggie.name}</h3>
 									{isInSeason(veggie, climateZone) && (
-										<span className="badge badge-success">In season!</span>
+										<span className="badge badge-sm badge-success">
+											In season!
+										</span>
 									)}
-								</div>
+								</CardTitle>
 								<div className="mt-2 space-y-1 text-sm">
 									<p>
 										<span>Time to Harvest: </span>
@@ -104,34 +103,38 @@ export default function guide() {
 										{veggie.companionPlants.join(', ')}
 									</p>
 								</div>
-								<div className="gap-4 flex items-end">
-									<input type="hidden" name="id" value={veggie.id} />
-									<input
-										placeholder="Quantity"
-										className="input input-sm w-20"
-										name="quantity"
-										min={1}
-										type="number"
-										required
-									/>
-									<button
-										disabled={isLoading}
-										type="submit"
-										className="btn btn-success btn-sm"
-									>
-										Add to My Garden
-									</button>
+								<CardActions className="mt-2">
+									<Form method="POST">
+										<div className="gap-4 flex items-end">
+											<input type="hidden" name="id" value={veggie.id} />
+											<input
+												placeholder="Quantity"
+												className="input input-sm w-20"
+												name="quantity"
+												min={1}
+												type="number"
+												required
+											/>
+											<button
+												disabled={isLoading}
+												type="submit"
+												className="btn btn-success btn-sm"
+											>
+												Add to My Garden
+											</button>
+										</div>
+									</Form>
 									<button
 										disabled={isLoading}
 										onClick={() => navigate(`/plant/${veggie.id}`)}
 										type="button"
 										className="btn btn-info btn-sm"
 									>
-										See details
+										Learn more
 									</button>
-								</div>
-							</div>
-						</Form>
+								</CardActions>
+							</CardBody>
+						</Card>
 					))}
 			</div>
 		</div>

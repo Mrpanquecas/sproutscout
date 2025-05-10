@@ -13,6 +13,7 @@ import { Link } from 'react-router';
 import { DeletePlantingModal } from './delete-planting-modal';
 import { UpdateQuantityModal } from './update-quantity-modal';
 import { UpdateHarvestModal } from './update-harvest-modal';
+import { Card, CardBody, CardTitle } from './card';
 
 type PlantingCardProps = GardenEntry & {
 	isLoading: boolean;
@@ -32,12 +33,12 @@ export function PlantingCard({
 	const plantDate = formatDate(new Date(createdAt));
 
 	return (
-		<div className="card w-full bg-base-100 shadow-xl">
-			<div className="card-body">
+		<Card>
+			<CardBody>
 				<div className="flex justify-between">
-					<h3 className="text-lg font-medium text-green-700 cursor-pointer">
+					<CardTitle>
 						<Link to={`/plant/${plant.id}`}>{plant.name}</Link>
-					</h3>
+					</CardTitle>
 					<div className="flex gap-4">
 						<div className="dropdown dropdown-end">
 							<button tabIndex={0} className="btn btn-ghost btn-sm">
@@ -131,7 +132,7 @@ export function PlantingCard({
 						})}
 					</div>
 				</div>
-			</div>
-		</div>
+			</CardBody>
+		</Card>
 	);
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { monthNames } from '~/types/garden';
 import type { Route } from './+types/garden';
 import { getGarden } from '~/utils/loader-helpers';
-import { Form, useLoaderData, useNavigation } from 'react-router';
+import { useLoaderData, useNavigation } from 'react-router';
 import {
 	deletePlanting,
 	updateDiary,
@@ -10,6 +10,7 @@ import {
 } from '~/utils/action-helpers';
 import { getCurrentMonth } from '~/utils/get-current-month';
 import { PlantingCard } from '../components/planting-card';
+import { PlantingSummary } from '~/components/planting-summary';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const gardenRequest = await getGarden(request);
@@ -35,9 +36,8 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function Garden() {
-	const [viewingDiary, setViewingDiary] = React.useState<number | null>(null);
-	const [diaryValue, setDiaryValue] =
-		React.useState<string>('No diary entry yet');
+	const [currentDiary, setCurrentDiary] = React.useState<number | null>(null);
+	const [diaryValue, setDiaryValue] = React.useState<string | undefined>();
 	const data = useLoaderData<typeof loader>();
 	const navigation = useNavigation();
 
@@ -45,11 +45,8 @@ export default function Garden() {
 		navigation.state === 'loading' || navigation.state === 'submitting';
 
 	const handleViewDiary = (id: number): void => {
-		setViewingDiary(id);
-		setDiaryValue(
-			data.garden?.plantings?.find((p) => p.id === id)?.diary ||
-				'No diary entry yet'
-		);
+		setCurrentDiary(id);
+		setDiaryValue(data.garden?.plantings?.find((p) => p.id === id)?.diary);
 	};
 
 	return (
@@ -79,39 +76,13 @@ export default function Garden() {
 								/>
 							))}
 						</div>
-						<div className="flex flex-col gap-6 order-first md:order-last">
-							<div className="p-4 rounded border border-green-200">
-								Garden Summary
-							</div>
-							{viewingDiary !== null && (
-								<Form method="POST" className="flex flex-col gap-2">
-									<input
-										type="hidden"
-										name="id"
-										value={
-											data.garden?.plantings?.find((p) => p.id === viewingDiary)
-												?.id
-										}
-									/>
-									<input type="hidden" name="intent" value="update-diary" />
-									<textarea
-										name="diary"
-										className="textarea textarea-bordered w-full field-sizing-content"
-										onChange={(e) => {
-											setDiaryValue(e.currentTarget.value);
-										}}
-										value={diaryValue}
-									/>
-									<button
-										type="submit"
-										className="btn btn-sm btn-success"
-										disabled={isLoading}
-									>
-										Save Diary
-									</button>
-								</Form>
-							)}
-						</div>
+						<PlantingSummary
+							currentDiary={currentDiary}
+							data={data.garden.plantings}
+							setDiaryValue={setDiaryValue}
+							diaryValue={diaryValue}
+							isLoading={isLoading}
+						/>
 					</div>
 				)}
 		</div>
