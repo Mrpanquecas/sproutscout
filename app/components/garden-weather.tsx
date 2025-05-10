@@ -91,6 +91,8 @@ function getWeatherCondition(code: number) {
 	return conditions[code] || 'Unknown';
 }
 
+const gardeningFriendlyWeatherCodes = [0, 1, 2, 3, 51, 80];
+
 export default function GardenWeather() {
 	const { weather } = useLoaderData<typeof loader>();
 	if (!weather) return null;
@@ -116,6 +118,15 @@ export default function GardenWeather() {
 				</CardTitle>
 				<div id="today" className="flex flex-col text-sm text-gray-600 mb-4">
 					<div className="flex items-center">
+						<span className="mr-2">
+							{gardeningFriendlyWeatherCodes.includes(
+								currentWeather.weather_code
+							)
+								? 'Good for gardening'
+								: 'Not so good for gardening'}
+						</span>
+					</div>
+					<div className="flex items-center">
 						<span className="mr-2">Wind: {currentWindSpeed} km/h</span>
 						<CloudArrowUpIcon className="w-4 h-4" />
 					</div>
@@ -130,7 +141,7 @@ export default function GardenWeather() {
 						<>
 							<div
 								key={index}
-								className={`flex flex-col items-center justify-between text-center border-r ${
+								className={`px-4 flex flex-col items-center justify-between text-center border-r ${
 									index === dailyWeather.weather_code.length - 1
 										? 'border-r-0'
 										: ''
@@ -138,16 +149,20 @@ export default function GardenWeather() {
 							>
 								<div className="flex flex-col items-center">
 									<WeatherIcon weatherCode={code} />
-									<span>{weekDays[new Date(dailyWeather.time[index]).getDay()]}</span>
+									<span>
+										{weekDays[new Date(dailyWeather.time[index]).getDay()]}
+									</span>
 								</div>
 								<div className="flex flex-col">
-									<span className="font-semibold">
-										{dailyWeather.temperature_2m_min[index]}°C{' '}
+									<p className="font-semibold">
+										{dailyWeather.temperature_2m_min[index]}°C
+									</p>
+									<p className="font-semibold">
 										{dailyWeather.temperature_2m_max[index]}°C
-									</span>
-									<span className="text-sm text-gray-600">
-										{weather.daily.precipitation_sum[index]} mm
-									</span>
+									</p>
+									<p className="text-sm text-gray-600">
+										{dailyWeather.precipitation_sum[index]}&nbsp;mm
+									</p>
 								</div>
 							</div>
 						</>
