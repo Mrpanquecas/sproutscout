@@ -15,8 +15,27 @@ import { UserIcon } from '@heroicons/react/16/solid';
 import { Menu } from '~/components/menu';
 import { checkLoginStatus } from '~/utils/check-login-status';
 import type { DecodedToken } from '~/types/types';
+import geoip from 'geoip-lite';
+import { getUserLocationWeather } from '~/utils/loader-helpers';
 
 export async function loader({ request }: Route.LoaderArgs) {
+	const ip =
+		request.headers.get('x-forwarded-for') ||
+		request.headers.get('cf-connecting-ip') ||
+		process.env.LOCAL_IP ||
+		'';
+	console.log(ip);
+	const geo = geoip.lookup(ip);
+	let weather;
+
+	if (geo) {
+		weather = await getUserLocationWeather({
+			latitude: geo.ll[0],
+			longitude: geo.ll[1],
+		});
+		console.log(weather);
+	}
+
 	const cookieList = request.headers.get('Cookie');
 	const hasAuthCookies =
 		cookieList &&

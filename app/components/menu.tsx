@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate, useNavigation } from 'react-router';
 import { useGardenStore } from '~/store/store';
-import type { ClimateTypes } from '~/types/garden';
+import type { ClimateTypes } from '~/types/garden.types';
 import { climateZones } from '~/utils/constants';
 
 export function Menu() {

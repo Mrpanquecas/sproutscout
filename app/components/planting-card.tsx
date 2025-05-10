@@ -8,7 +8,7 @@ import {
 import { formatDate } from '../utils/format-date';
 import { calculateTimeToHarvest } from '../utils/calculate-time-to-harvest';
 import { formatYield } from '../utils/format-yield';
-import type { GardenEntry } from '~/types/garden';
+import type { GardenEntry } from '~/types/garden.types';
 import { Link } from 'react-router';
 import { DeletePlantingModal } from './delete-planting-modal';
 import { UpdateQuantityModal } from './update-quantity-modal';

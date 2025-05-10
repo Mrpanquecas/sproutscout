@@ -1,5 +1,5 @@
 import React from 'react';
-import { monthNames } from '~/types/garden';
+import { monthNames } from '~/types/garden.types';
 import type { Route } from './+types/garden';
 import { getGarden } from '~/utils/loader-helpers';
 import { useLoaderData, useNavigation } from 'react-router';

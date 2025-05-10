@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import type { ClimateTypes } from '~/types/garden';
-import type { GardenEntry } from '~/types/garden';
-import type { GardenLayout } from '~/types/garden';
-import type { GardenSize } from '~/types/garden';
+import type { ClimateTypes } from '~/types/garden.types';
+import type { GardenEntry } from '~/types/garden.types';
+import type { GardenLayout } from '~/types/garden.types';
+import type { GardenSize } from '~/types/garden.types';
 
 interface GardenState {
 	climateZone: ClimateTypes;

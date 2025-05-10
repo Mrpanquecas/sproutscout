@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form } from 'react-router';
-import type { GardenEntry } from '~/types/garden';
+import type { GardenEntry } from '~/types/garden.types';
 import { Card, CardActions, CardBody, CardTitle } from './card';
 
 type PlantingSummaryProps = {

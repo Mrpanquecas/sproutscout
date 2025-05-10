@@ -2,7 +2,7 @@ import React from 'react';
 import { useGardenStore } from '../store/store';
 import { getHarvestMonth } from '~/utils/get-harvest-month';
 import { isInSeason } from '~/utils/in-season';
-import { monthNames, type Vegetable } from '~/types/garden';
+import { monthNames, type Vegetable } from '~/types/garden.types';
 
 type CalendarTableProps = {
 	vegetables: Vegetable[];

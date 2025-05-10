@@ -1,4 +1,4 @@
-import type { ClimateZones } from '~/types/garden';
+import type { ClimateZones } from '~/types/garden.types';
 
 export const climateZones: ClimateZones[] = [
 	{

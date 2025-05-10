@@ -13,7 +13,7 @@ import type { Route } from './+types/guide';
 import { getGarden, getVegetables } from '~/utils/loader-helpers';
 import { formatYield } from '~/utils/format-yield';
 import { addPlanting } from '~/utils/action-helpers';
-import { monthNames } from '~/types/garden';
+import { monthNames } from '~/types/garden.types';
 import { Card, CardActions, CardBody, CardTitle } from '~/components/card';
 
 export async function loader({ request }: Route.LoaderArgs) {

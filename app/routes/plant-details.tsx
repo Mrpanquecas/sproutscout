@@ -21,7 +21,7 @@ import { addPlanting } from '~/utils/action-helpers';
 import { useGardenStore } from '~/store/store';
 import CalendarTable from '~/components/calendar-table';
 import { ArrowLeftIcon } from '@heroicons/react/16/solid';
-import { monthNames, type Vegetable } from '~/types/garden';
+import { monthNames, type Vegetable } from '~/types/garden.types';
 
 export async function loader({ params, request }: Route.LoaderArgs) {
 	const plant: Vegetable = await getVegetableDetails(request, params.plant_id);
