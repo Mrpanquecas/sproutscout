@@ -32,7 +32,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 		});
 	}
 
-	return { garden: gardenRequest, weather };
+	return { garden: gardenRequest, weather, ip, geo };
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -59,6 +59,7 @@ export default function Garden() {
 	const isLoading =
 		navigation.state === 'loading' || navigation.state === 'submitting';
 
+	console.log(data.geo, data.ip);
 	return (
 		<div>
 			<div className="flex justify-between items-center mb-4">
