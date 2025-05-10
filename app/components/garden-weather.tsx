@@ -91,7 +91,7 @@ function getWeatherCondition(code: number) {
 	return conditions[code] || 'Unknown';
 }
 
-const gardeningFriendlyWeatherCodes = [0, 1, 2, 3, 51, 80];
+const gardeningFriendlyWeatherCodes = new Set([0, 1, 2, 3, 51, 80]);
 
 export default function GardenWeather() {
 	const { weather } = useLoaderData<typeof loader>();
@@ -119,9 +119,7 @@ export default function GardenWeather() {
 				<div id="today" className="flex flex-col text-sm text-gray-600 mb-4">
 					<div className="flex items-center">
 						<span className="mr-2">
-							{gardeningFriendlyWeatherCodes.includes(
-								currentWeather.weather_code
-							)
+							{gardeningFriendlyWeatherCodes.has(currentWeather.weather_code)
 								? 'Good for gardening'
 								: 'Not so good for gardening'}
 						</span>
