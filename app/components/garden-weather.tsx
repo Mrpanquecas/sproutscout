@@ -8,6 +8,8 @@ import {
 import type { loader } from '~/routes/garden';
 import { Card, CardBody, CardTitle } from './card';
 
+const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 type WeatherIconProps = {
 	weatherCode: number;
 };
@@ -136,7 +138,7 @@ export default function GardenWeather() {
 							>
 								<div className="flex flex-col items-center">
 									<WeatherIcon weatherCode={code} />
-									<span>{index === 0 ? 'Today' : `Day ${index}`}</span>
+									<span>{weekDays[new Date(dailyWeather.time[index]).getDay()]}</span>
 								</div>
 								<div className="flex flex-col">
 									<span className="font-semibold">

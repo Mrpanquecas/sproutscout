@@ -13,6 +13,7 @@ import { PlantingCard } from '../components/planting-card';
 import { PlantingSummary } from '~/components/planting-summary';
 import GardenWeather from '~/components/garden-weather';
 import geoip from 'geoip-lite';
+import { Card, CardBody } from '~/components/card';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const gardenRequest = await getGarden(request);
@@ -75,9 +76,16 @@ export default function Garden() {
 			</div>
 			{(data.garden?.plantings?.length === undefined ||
 				data.garden?.plantings?.length === 0) && (
-				<div className="text-center py-8 text-gray-500">
-					<p>You haven&apos;t added any plantings yet.</p>
-					<p>Click &quot;Veggie Guide&quot; and add some!</p>
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div className="space-y-4 md:order-first order-last">
+						<Card>
+							<CardBody>
+								<p>You haven&apos;t added any plantings yet.</p>
+								<p>Click &quot;Veggie Guide&quot; and add some!</p>
+							</CardBody>
+						</Card>
+					</div>
+					<GardenWeather />
 				</div>
 			)}
 			{data.garden?.plantings?.length !== undefined &&
