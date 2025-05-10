@@ -42,11 +42,15 @@ export type OpenMeteoResponse = {
 		weather_code: number[];
 		temperature_2m_max: number[];
 		temperature_2m_min: number[];
+		precipitation_sum: number[];
+		wind_speed_10m: number[];
 	};
 	daily_units: {
 		time: string;
 		weather_code: string;
 		temperature_2m_max: string;
 		temperature_2m_min: string;
+		precipitation_sum: string;
 	};
+	precipitation_probability: number[];
 };

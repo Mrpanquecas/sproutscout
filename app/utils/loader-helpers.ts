@@ -111,7 +111,7 @@ export const getUserLocationWeather = async ({
 }): Promise<OpenMeteoResponse | undefined> => {
 	try {
 		const resp = await fetch(
-			`${process.env.WEATHER_API_URL}/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`,
+			`${process.env.WEATHER_API_URL}/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&daily=precipitation_sum`,
 			{
 				method: 'GET',
 			}

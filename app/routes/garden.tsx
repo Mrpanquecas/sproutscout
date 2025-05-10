@@ -1,7 +1,7 @@
 import React from 'react';
 import { monthNames } from '~/types/garden.types';
 import type { Route } from './+types/garden';
-import { getGarden } from '~/utils/loader-helpers';
+import { getGarden, getUserLocationWeather } from '~/utils/loader-helpers';
 import { useLoaderData, useNavigation } from 'react-router';
 import {
 	deletePlanting,
@@ -11,11 +11,28 @@ import {
 import { getCurrentMonth } from '~/utils/get-current-month';
 import { PlantingCard } from '../components/planting-card';
 import { PlantingSummary } from '~/components/planting-summary';
+import GardenWeather from '~/components/garden-weather';
+import geoip from 'geoip-lite';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const gardenRequest = await getGarden(request);
+	const ip =
+		request.headers.get('x-forwarded-for') ||
+		request.headers.get('cf-connecting-ip') ||
+		process.env.LOCAL_IP ||
+		'';
+	console.log(ip);
+	const geo = geoip.lookup(ip);
+	let weather;
 
-	return { garden: gardenRequest };
+	if (geo) {
+		weather = await getUserLocationWeather({
+			latitude: geo.ll[0],
+			longitude: geo.ll[1],
+		});
+	}
+
+	return { garden: gardenRequest, weather };
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -76,6 +93,7 @@ export default function Garden() {
 								/>
 							))}
 						</div>
+						<GardenWeather />
 						<PlantingSummary
 							currentDiary={currentDiary}
 							data={data.garden.plantings}
