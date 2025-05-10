@@ -101,14 +101,16 @@ export default function Garden() {
 								/>
 							))}
 						</div>
-						<GardenWeather />
-						<PlantingSummary
-							currentDiary={currentDiary}
-							data={data.garden.plantings}
-							setDiaryValue={setDiaryValue}
-							diaryValue={diaryValue}
-							isLoading={isLoading}
-						/>
+						<div className="space-y-4">
+							<GardenWeather />
+							<PlantingSummary
+								currentDiary={currentDiary}
+								data={data.garden.plantings}
+								setDiaryValue={setDiaryValue}
+								diaryValue={diaryValue}
+								isLoading={isLoading}
+							/>
+						</div>
 					</div>
 				)}
 		</div>
