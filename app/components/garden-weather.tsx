@@ -136,34 +136,32 @@ export default function GardenWeather() {
 
 				<div className="flex overflow-auto">
 					{dailyWeather.weather_code.map((code, index) => (
-						<>
-							<div
-								key={index}
-								className={`px-4 flex flex-col items-center justify-between text-center border-r ${
-									index === dailyWeather.weather_code.length - 1
-										? 'border-r-0'
-										: ''
-								}`}
-							>
-								<div className="flex flex-col items-center">
-									<WeatherIcon weatherCode={code} />
-									<span>
-										{weekDays[new Date(dailyWeather.time[index]).getDay()]}
-									</span>
-								</div>
-								<div className="flex flex-col">
-									<p className="font-semibold">
-										{dailyWeather.temperature_2m_min[index]}°C
-									</p>
-									<p className="font-semibold">
-										{dailyWeather.temperature_2m_max[index]}°C
-									</p>
-									<p className="text-sm text-gray-600">
-										{dailyWeather.precipitation_sum[index]}&nbsp;mm
-									</p>
-								</div>
+						<div
+							key={index}
+							className={`px-4 flex flex-col items-center justify-between text-center border-r ${
+								index === dailyWeather.weather_code.length - 1
+									? 'border-r-0'
+									: ''
+							}`}
+						>
+							<div className="flex flex-col items-center">
+								<WeatherIcon weatherCode={code} />
+								<span>
+									{weekDays[new Date(dailyWeather.time[index]).getDay()]}
+								</span>
 							</div>
-						</>
+							<div className="flex flex-col">
+								<p className="font-semibold">
+									{dailyWeather.temperature_2m_min[index]}°C
+								</p>
+								<p className="font-semibold">
+									{dailyWeather.temperature_2m_max[index]}°C
+								</p>
+								<p className="text-sm text-gray-600">
+									{dailyWeather.precipitation_sum[index]}&nbsp;mm
+								</p>
+							</div>
+						</div>
 					))}
 				</div>
 			</CardBody>

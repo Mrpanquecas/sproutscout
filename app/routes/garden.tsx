@@ -31,7 +31,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 			longitude: geo.ll[1],
 		});
 	}
-
 	return { garden: gardenRequest, weather, ip, geo };
 }
 

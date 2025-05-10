@@ -72,7 +72,7 @@ export default function guide() {
 						<Card key={veggie.id}>
 							<CardBody>
 								<CardTitle>
-									<h3 className="text-lg font-medium">{veggie.name}</h3>
+									{veggie.name}
 									{isInSeason(veggie, climateZone) && (
 										<span className="badge badge-sm badge-success">
 											In season!
