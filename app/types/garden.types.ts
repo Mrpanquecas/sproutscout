@@ -31,7 +31,7 @@ export type ClimateTypes =
 export type GardenCell = {
 	x: number;
 	y: number;
-	veggie: Vegetable | null;
+	plantId: number | null;
 };
 
 export type GardenSize = {

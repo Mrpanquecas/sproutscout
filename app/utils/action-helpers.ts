@@ -1,4 +1,5 @@
 import { getCookieValue } from './cookie-util';
+import { serverApi } from './api';
 
 export async function deletePlanting(
 	request: Request,
@@ -12,17 +13,23 @@ export async function deletePlanting(
 	const plantingId = formData.get('id');
 
 	try {
-		await fetch(`${process.env.API_URL}/api/v1/planting/${plantingId}`, {
-			method: 'DELETE',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-				'content-type': 'application/json',
-			},
-		});
+		await serverApi.delete(
+			`${process.env.API_URL}/api/v1/planting/${plantingId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+					'content-type': 'application/json',
+				},
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
 }
+
+type UpdateQuantityPayload = {
+	newQuantity: number;
+};
 
 export async function updateQuantity(
 	request: Request,
@@ -39,18 +46,24 @@ export async function updateQuantity(
 	const payload = JSON.stringify({ newQuantity });
 
 	try {
-		await fetch(`${process.env.API_URL}/api/v1/planting/${plantingId}`, {
-			method: 'PATCH',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-				'content-type': 'application/json',
-			},
-			body: payload,
-		});
+		await serverApi.patch<UpdateQuantityPayload>(
+			`${process.env.API_URL}/api/v1/planting/${plantingId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+					'content-type': 'application/json',
+				},
+				body: payload,
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
 }
+
+type UpdateDiaryPayload = {
+	newDiary: string;
+};
 
 export async function updateDiary(
 	request: Request,
@@ -67,18 +80,24 @@ export async function updateDiary(
 	const payload = JSON.stringify({ newDiary });
 
 	try {
-		await fetch(`${process.env.API_URL}/api/v1/planting/${plantingId}`, {
-			method: 'PATCH',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-				'content-type': 'application/json',
-			},
-			body: payload,
-		});
+		await serverApi.patch<UpdateDiaryPayload>(
+			`${process.env.API_URL}/api/v1/planting/${plantingId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+					'content-type': 'application/json',
+				},
+				body: payload,
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
 }
+
+type UpdateHarvestPayload = {
+	newHarvest: number;
+};
 
 export async function updateHarvest(
 	request: Request,
@@ -95,18 +114,25 @@ export async function updateHarvest(
 	const payload = JSON.stringify({ newHarvest });
 
 	try {
-		await fetch(`${process.env.API_URL}/api/v1/planting/${plantingId}`, {
-			method: 'PATCH',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-				'content-type': 'application/json',
-			},
-			body: payload,
-		});
+		await serverApi.patch<UpdateHarvestPayload>(
+			`${process.env.API_URL}/api/v1/planting/${plantingId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+					'content-type': 'application/json',
+				},
+				body: payload,
+			}
+		);
 	} catch (error) {
 		console.log(error);
 	}
 }
+
+type AddPlantingPayload = {
+	quantity: number;
+	plantId: string;
+};
 
 export async function addPlanting(request: Request): Promise<void> {
 	const formData = await request.formData();
@@ -119,23 +145,27 @@ export async function addPlanting(request: Request): Promise<void> {
 	const accessToken = getCookieValue(cookieList, 'access-token');
 
 	const payload = JSON.stringify({ quantity, plantId });
-	const resp = await fetch(`${process.env.API_URL}/api/v1/planting/add`, {
-		method: 'POST',
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-			'content-type': 'application/json',
-		},
-		body: payload,
-	});
-
-	if (resp.ok) {
-		const data = await resp.json();
-		return data;
+	try {
+		await serverApi.post<AddPlantingPayload>(
+			`${process.env.API_URL}/api/v1/planting/add`,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+					'content-type': 'application/json',
+				},
+				body: payload,
+			}
+		);
+	} catch (error) {
+		console.log(error);
 	}
-	throw "Can't save planting";
 }
 
-export async function saveGardenLayout(
+type GardenLayoutPayload = {
+	gardenLayout: string;
+};
+
+export async function updateGardenLayout(
 	request: Request,
 	formData: FormData
 ): Promise<void> {
@@ -146,17 +176,20 @@ export async function saveGardenLayout(
 
 	const gardenLayout = formData.get('gardenLayout');
 
-	const payload = JSON.stringify(gardenLayout);
+	const payload = JSON.parse(gardenLayout as string);
 
+	console.log('PAYLOAD', payload);
 	try {
-		const resp = await fetch(`${process.env.API_URL}/api/v1/designer`, {
-			method: 'PUT',
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-				'content-type': 'application/json',
-			},
-			body: payload,
-		});
+		const resp = await serverApi.put<GardenLayoutPayload>(
+			`${process.env.API_URL}/api/v1/designer`,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+					'content-type': 'application/json',
+				},
+				body: payload,
+			}
+		);
 		console.log('RESP', resp);
 	} catch (error) {
 		console.log(error);

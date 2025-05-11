@@ -13,8 +13,6 @@ interface GardenState {
 	setGardenLayout: (layout: GardenLayout) => void;
 	gardenSize: GardenSize;
 	setGardenSize: (size: GardenSize) => void;
-	cellNotes: Record<string, string>;
-	setCellNotes: (note: Record<string, string>) => void;
 }
 
 export const useGardenStore = create<GardenState>()(
@@ -29,8 +27,6 @@ export const useGardenStore = create<GardenState>()(
 				setGardenLayout: (layout) => set({ gardenLayout: layout }),
 				gardenSize: { width: 6, height: 4 },
 				setGardenSize: (size) => set({ gardenSize: size }),
-				cellNotes: {},
-				setCellNotes: (notes) => set({ cellNotes: notes }),
 			}),
 			{
 				name: 'garden-storage',
