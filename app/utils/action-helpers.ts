@@ -134,3 +134,31 @@ export async function addPlanting(request: Request): Promise<void> {
 	}
 	throw "Can't save planting";
 }
+
+export async function saveGardenLayout(
+	request: Request,
+	formData: FormData
+): Promise<void> {
+	const cookieList = request.headers.get('Cookie');
+	if (!cookieList) return;
+
+	const accessToken = getCookieValue(cookieList, 'access-token');
+
+	const gardenLayout = formData.get('gardenLayout');
+
+	const payload = JSON.stringify(gardenLayout);
+
+	try {
+		const resp = await fetch(`${process.env.API_URL}/api/v1/designer`, {
+			method: 'PUT',
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				'content-type': 'application/json',
+			},
+			body: payload,
+		});
+		console.log('RESP', resp);
+	} catch (error) {
+		console.log(error);
+	}
+}

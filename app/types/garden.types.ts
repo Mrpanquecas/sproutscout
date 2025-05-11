@@ -89,6 +89,10 @@ export type Garden = {
 	plantings: GardenEntry[];
 };
 
+export type VegetablesResponse = {
+	plants: Vegetable[];
+};
+
 // TypeScript enum definitions for vegetable growing requirements
 enum SpacingRequirement {
 	VERY_CLOSE = 'VERY_CLOSE', // 5-15 cm

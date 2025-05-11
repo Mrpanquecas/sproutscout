@@ -6,17 +6,27 @@ import { isInSeason } from '../utils/in-season';
 import { getSpacingRecommendation } from '../utils/space-recommendation';
 import { getVegetables } from '~/utils/loader-helpers';
 import type { Route } from './+types/garden-layout';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useSubmit } from 'react-router';
 import { Card, CardBody, CardTitle } from '~/components/card';
+import { saveGardenLayout } from '~/utils/action-helpers';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const plants = await getVegetables(request);
 	return { plants };
 }
 
+export async function action({ request }: Route.ActionArgs) {
+	const formData = await request.formData();
+	const intent = formData.get('intent');
+	if (intent === 'save-layout') {
+		await saveGardenLayout(request, formData);
+	}
+}
+
 export default function layout() {
 	const data = useLoaderData<typeof loader>();
 	const [filter, setFilter] = useState('');
+	const submit = useSubmit();
 
 	const {
 		setPlantedPlants,
@@ -35,6 +45,7 @@ export default function layout() {
 	const [editingNoteCell, setEditingNoteCell] = useState<{
 		x: number;
 		y: number;
+		plantId: number | null;
 	} | null>(null);
 
 	// Create a new garden layout grid
@@ -45,7 +56,7 @@ export default function layout() {
 		for (let y = 0; y < gardenSize.height; y++) {
 			const row = [];
 			for (let x = 0; x < gardenSize.width; x++) {
-				row.push({ x, y, veggie: null });
+				row.push({ x, y, plantId: null });
 			}
 			newLayout.push(row);
 		}
@@ -58,8 +69,10 @@ export default function layout() {
 
 		for (const row of gardenLayout) {
 			for (const cell of row) {
-				if (cell.veggie) {
-					const veggieName = cell.veggie.name;
+				if (cell.plantId) {
+					const veggieName = data.plants?.find(
+						(v) => v.id === cell.plantId
+					)?.name;
 					veggieCount[veggieName] = (veggieCount[veggieName] || 0) + 1;
 				}
 			}
@@ -85,25 +98,23 @@ export default function layout() {
 		setEditingNoteCell(null);
 	};
 
-	const placeVeggieInGarden = (x: number, y: number) => {
+	const placeVeggieInGarden = (x: number, y: number, plantId: number) => {
 		if (!selectedVeggie) return;
 
 		const newLayout = [...gardenLayout];
 		const cell = newLayout[y][x];
 
 		// If cell already contains this veggie, remove it
-		if (cell.veggie && cell.veggie.id === selectedVeggie.id) {
-			newLayout[y][x] = { ...cell, veggie: null };
+		if (cell.plantId && cell.plantId === plantId) {
+			newLayout[y][x] = { ...cell, plantId: null };
 		} else {
 			// Otherwise place the veggie
-			newLayout[y][x] = { ...cell, veggie: selectedVeggie };
+			newLayout[y][x] = { ...cell, plantId };
 
 			// Add to plantings if not already there
-			const existingPlanting = plantedPlants.find(
-				(p) => p.id === selectedVeggie.id
-			);
+			const existingPlanting = plantedPlants.find((p) => p.id === plantId);
 			if (!existingPlanting) {
-				addSpecificVeggie(selectedVeggie.id);
+				addSpecificVeggie(plantId);
 			}
 		}
 
@@ -139,6 +150,17 @@ export default function layout() {
 	useEffect(() => {
 		setIsHydrated(true);
 	}, []);
+
+	const handleSubmit = () => {
+		const formData = new FormData();
+		formData.append('gardenLayout', JSON.stringify(gardenLayout));
+		formData.append('intent', 'save-layout');
+
+		submit(formData, {
+			method: 'post',
+			action: '/layout',
+		});
+	};
 
 	return (
 		<div>
@@ -325,12 +347,16 @@ export default function layout() {
 																addNoteToCell(x, y);
 															}
 														} else {
-															placeVeggieInGarden(x, y);
+															placeVeggieInGarden(x, y, selectedVeggie?.id);
 														}
 													}}
 													onDoubleClick={() => {
 														if (!editingNoteCell) {
-															setEditingNoteCell({ x, y });
+															setEditingNoteCell({
+																x,
+																y,
+																plantId: selectedVeggie?.id,
+															});
 															setCurrentNote(cellNotes[cellKey] || '');
 														}
 													}}
@@ -384,6 +410,9 @@ export default function layout() {
 								<div>Single click: Place/remove plant</div>
 								<div>Double click: Add a note</div>
 							</div>
+							<button className="btn btn-success" onClick={handleSubmit}>
+								Save Layout
+							</button>
 						</CardBody>
 					</Card>
 				</div>
