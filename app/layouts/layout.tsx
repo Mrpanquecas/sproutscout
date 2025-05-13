@@ -15,19 +15,22 @@ import { UserIcon } from '@heroicons/react/16/solid';
 import { Menu } from '~/components/menu';
 import { checkLoginStatus } from '~/utils/check-login-status';
 import type { DecodedToken } from '~/types/types';
+import { serverApi } from '~/utils/api';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const cookieList = request.headers.get('Cookie');
+	console.log(cookieList);
 	const hasAuthCookies =
 		cookieList &&
-		cookieList.includes('access-token') &&
-		cookieList.includes('refresh-token');
+		(cookieList.includes('access-token') ||
+			cookieList.includes('refresh-token'));
 
 	if (hasAuthCookies) {
 		const token = cookieList
 			?.split('; ')
 			.find((row) => row.startsWith('access-token='))
 			?.split('=')[1];
+		console.log('Access token:', token);
 		if (token) {
 			try {
 				const decoded = jwtDecode<DecodedToken>(token);
@@ -36,6 +39,35 @@ export async function loader({ request }: Route.LoaderArgs) {
 				return { isLoggedIn: false };
 			}
 		}
+		const refreshToken = cookieList
+			?.split('; ')
+			.find((row) => row.startsWith('refresh-token='))
+			?.split('=')[1];
+		console.log('Refresh token:', refreshToken);
+		const refreshResponse = await serverApi
+			.post(`${process.env.API_URL}/api/v1/auth/refresh`, {
+				json: { refreshToken },
+			})
+			.json();
+		console.log('Refresh response:', refreshResponse);
+		const headers = new Headers();
+		headers.append(
+			'Set-Cookie',
+			`access-token=${refreshResponse.access}; Path=/; Max-Age=3600; SameSite=Lax`
+		);
+		headers.append(
+			'Set-Cookie',
+			`refresh-token=${refreshResponse.refresh}; Path=/; Max-Age=${
+				30 * 24 * 3600
+			}; SameSite=Lax`
+		);
+
+		return new Response(
+			JSON.stringify({ success: true, isLoggedIn: true, isAnon: true }),
+			{
+				headers,
+			}
+		);
 	}
 
 	const tokens = await authAnonUser();

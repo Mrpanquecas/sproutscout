@@ -35,36 +35,8 @@ export const setNavigate = (nav: ReturnType<typeof useNavigate>) => {
 // Server-side API client
 export const serverApi = ky.extend({
 	hooks: {
-		beforeRequest: [
-			(request, options) => {
-				const headers = options.headers as Headers;
-				if (headers) {
-					const token = headers.get('Authorization');
-					if (token) {
-						request.headers.set('Authorization', token);
-					}
-				}
-			},
-		],
-		afterResponse: [
-			async (request: Request, options: Options, response: Response) => {
-				if (response.status === 401) {
-					// Remove tokens from headers
-					const headers = options.headers as Headers;
-					if (headers) {
-						headers.delete('Authorization');
-					}
-
-					// Redirect to login
-					throw redirect('/login', {
-						headers: {
-							'Cache-Control': 'no-store',
-						},
-					});
-				}
-				return response;
-			},
-		],
+		beforeRequest: [],
+		afterResponse: [],
 	},
 });
 
