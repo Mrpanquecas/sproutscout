@@ -1,5 +1,5 @@
 import { getCookieValue } from './cookie-util';
-import { serverApi } from './api';
+import ky from 'ky';
 
 export async function deletePlanting(
 	request: Request,
@@ -8,20 +8,17 @@ export async function deletePlanting(
 	const cookieList = request.headers.get('Cookie');
 	if (!cookieList) return;
 
-	const accessToken = getCookieValue(cookieList, 'access-token');
+	const accessToken = getCookieValue(cookieList, 'accessToken');
 
 	const plantingId = formData.get('id');
 
 	try {
-		await serverApi.delete(
-			`${process.env.API_URL}/api/v1/planting/${plantingId}`,
-			{
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-					'content-type': 'application/json',
-				},
-			}
-		);
+		await ky.delete(`${process.env.API_URL}/api/v1/planting/${plantingId}`, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				'content-type': 'application/json',
+			},
+		});
 	} catch (error) {
 		console.log(error);
 	}
@@ -38,7 +35,7 @@ export async function updateQuantity(
 	const cookieList = request.headers.get('Cookie');
 	if (!cookieList) return;
 
-	const accessToken = getCookieValue(cookieList, 'access-token');
+	const accessToken = getCookieValue(cookieList, 'accessToken');
 
 	const plantingId = formData.get('id');
 	const newQuantity = formData.get('quantity');
@@ -46,7 +43,7 @@ export async function updateQuantity(
 	const payload = JSON.stringify({ newQuantity });
 
 	try {
-		await serverApi.patch<UpdateQuantityPayload>(
+		await ky.patch<UpdateQuantityPayload>(
 			`${process.env.API_URL}/api/v1/planting/${plantingId}`,
 			{
 				headers: {
@@ -72,7 +69,7 @@ export async function updateDiary(
 	const cookieList = request.headers.get('Cookie');
 	if (!cookieList) return;
 
-	const accessToken = getCookieValue(cookieList, 'access-token');
+	const accessToken = getCookieValue(cookieList, 'accessToken');
 
 	const plantingId = formData.get('id');
 	const newDiary = formData.get('diary');
@@ -80,7 +77,7 @@ export async function updateDiary(
 	const payload = JSON.stringify({ newDiary });
 
 	try {
-		await serverApi.patch<UpdateDiaryPayload>(
+		await ky.patch<UpdateDiaryPayload>(
 			`${process.env.API_URL}/api/v1/planting/${plantingId}`,
 			{
 				headers: {
@@ -106,7 +103,7 @@ export async function updateHarvest(
 	const cookieList = request.headers.get('Cookie');
 	if (!cookieList) return;
 
-	const accessToken = getCookieValue(cookieList, 'access-token');
+	const accessToken = getCookieValue(cookieList, 'accessToken');
 
 	const plantingId = formData.get('id');
 	const newHarvest = formData.get('quantity');
@@ -114,7 +111,7 @@ export async function updateHarvest(
 	const payload = JSON.stringify({ newHarvest });
 
 	try {
-		await serverApi.patch<UpdateHarvestPayload>(
+		await ky.patch<UpdateHarvestPayload>(
 			`${process.env.API_URL}/api/v1/planting/${plantingId}`,
 			{
 				headers: {
@@ -142,11 +139,14 @@ export async function addPlanting(request: Request): Promise<void> {
 	const cookieList = request.headers.get('Cookie');
 	if (!cookieList) return;
 
-	const accessToken = getCookieValue(cookieList, 'access-token');
+	const accessToken = getCookieValue(cookieList, 'accessToken');
+
+	console.log('ACCESS TOKEN', accessToken);
+	console.log('COOKIE LIST', cookieList);
 
 	const payload = JSON.stringify({ quantity, plantId });
 	try {
-		await serverApi.post<AddPlantingPayload>(
+		await ky.post<AddPlantingPayload>(
 			`${process.env.API_URL}/api/v1/planting/add`,
 			{
 				headers: {
@@ -172,7 +172,7 @@ export async function updateGardenLayout(
 	const cookieList = request.headers.get('Cookie');
 	if (!cookieList) return;
 
-	const accessToken = getCookieValue(cookieList, 'access-token');
+	const accessToken = getCookieValue(cookieList, 'accessToken');
 
 	const gardenLayout = formData.get('gardenLayout');
 
@@ -180,7 +180,7 @@ export async function updateGardenLayout(
 
 	console.log('PAYLOAD', payload);
 	try {
-		const resp = await serverApi.put<GardenLayoutPayload>(
+		const resp = await ky.put<GardenLayoutPayload>(
 			`${process.env.API_URL}/api/v1/designer`,
 			{
 				headers: {

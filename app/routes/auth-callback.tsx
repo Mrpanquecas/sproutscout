@@ -2,8 +2,6 @@ import { redirect } from 'react-router';
 import type { Route } from './+types/login';
 
 export async function action({ request }: Route.ActionArgs) {
-	console.log('REQUEST', request);
-
 	const formData = await request.formData();
 	const cookies = (await request.headers.get('cookie')) || '';
 	const idToken = formData.get('credential');
@@ -11,7 +9,6 @@ export async function action({ request }: Route.ActionArgs) {
 
 	const payload = JSON.stringify({ idToken, csrfToken });
 
-	console.log('PAYLOAD', payload);
 	const resp = await fetch(`${process.env.API_URL}/api/v1/auth/google/login`, {
 		method: 'POST',
 		headers: {
@@ -21,19 +18,16 @@ export async function action({ request }: Route.ActionArgs) {
 		body: payload,
 	});
 
-	console.log('RESP', resp);
-
 	if (resp.ok) {
 		const data = await resp.json();
-		console.log('DATA', data);
 		const headers = new Headers();
 		headers.append(
 			'Set-Cookie',
-			`access-token=${data.access}; Path=/; Max-Age=3600; SameSite=Lax`
+			`accessToken=${data.access}; Path=/; Max-Age=3600; SameSite=Lax`
 		);
 		headers.append(
 			'Set-Cookie',
-			`refresh-token=${data.refresh}; Path=/; Max-Age=${
+			`refreshToken=${data.refresh}; Path=/; Max-Age=${
 				30 * 24 * 3600
 			}; SameSite=Lax`
 		);

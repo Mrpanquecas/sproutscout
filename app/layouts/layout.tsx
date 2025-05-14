@@ -6,93 +6,59 @@ import {
 	useNavigate,
 	useLoaderData,
 } from 'react-router';
-import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 
 import type { Route } from './+types/layout';
-import { authAnonUser } from '~/utils/loader-helpers';
 import { UserIcon } from '@heroicons/react/16/solid';
 import { Menu } from '~/components/menu';
 import { checkLoginStatus } from '~/utils/check-login-status';
-import type { DecodedToken } from '~/types/types';
-import { serverApi } from '~/utils/api';
+import { accessTokenCookie, refreshTokenCookie } from '~/auth.server';
+import { refreshTokenIfNeeded } from '~/auth.server';
+import { ensureAnonymousAuth } from '~/auth.server';
 
 export async function loader({ request }: Route.LoaderArgs) {
-	const cookieList = request.headers.get('Cookie');
-	console.log(cookieList);
-	const hasAuthCookies =
-		cookieList &&
-		(cookieList.includes('access-token') ||
-			cookieList.includes('refresh-token'));
+	try {
+		await ensureAnonymousAuth(request);
 
-	if (hasAuthCookies) {
-		const token = cookieList
-			?.split('; ')
-			.find((row) => row.startsWith('access-token='))
-			?.split('=')[1];
-		console.log('Access token:', token);
-		if (token) {
-			try {
-				const decoded = jwtDecode<DecodedToken>(token);
-				return { isLoggedIn: true, isAnon: decoded.anon };
-			} catch {
-				return { isLoggedIn: false };
-			}
+		const { accessToken, refreshToken } = await refreshTokenIfNeeded(request);
+
+		// Create response headers for setting cookies
+		const headers = new Headers();
+
+		if (accessToken) {
+			headers.append(
+				'Set-Cookie',
+				await accessTokenCookie.serialize(accessToken)
+			);
 		}
-		const refreshToken = cookieList
-			?.split('; ')
-			.find((row) => row.startsWith('refresh-token='))
-			?.split('=')[1];
-		console.log('Refresh token:', refreshToken);
-		const refreshResponse = await serverApi
-			.post(`${process.env.API_URL}/api/v1/auth/refresh`, {
-				json: { refreshToken },
-			})
-			.json();
-		console.log('Refresh response:', refreshResponse);
+
+		if (refreshToken) {
+			headers.append(
+				'Set-Cookie',
+				await refreshTokenCookie.serialize(refreshToken)
+			);
+		}
+
+		// Check if user is authenticated
+		const isAuthenticated = !!accessToken;
+
+		// Return auth status and headers for cookie setting
+		return { isAuthenticated, headers };
+	} catch (error) {
+		// If token refresh fails, clear cookies
 		const headers = new Headers();
 		headers.append(
 			'Set-Cookie',
-			`access-token=${refreshResponse.access}; Path=/; Max-Age=3600; SameSite=Lax`
+			await accessTokenCookie.serialize('', { maxAge: 0 })
 		);
 		headers.append(
 			'Set-Cookie',
-			`refresh-token=${refreshResponse.refresh}; Path=/; Max-Age=${
-				30 * 24 * 3600
-			}; SameSite=Lax`
+			await refreshTokenCookie.serialize('', { maxAge: 0 })
 		);
 
-		return new Response(
-			JSON.stringify({ success: true, isLoggedIn: true, isAnon: true }),
-			{
-				headers,
-			}
-		);
+		console.error('Error refreshing token:', error);
+		return { isAuthenticated: false, headers };
 	}
-
-	const tokens = await authAnonUser();
-	console.log(tokens);
-
-	if (!tokens) return { isLoggedIn: false };
-
-	const headers = new Headers();
-	headers.append(
-		'Set-Cookie',
-		`access-token=${tokens.accessToken}; Path=/; Max-Age=3600; SameSite=Lax`
-	);
-	headers.append(
-		'Set-Cookie',
-		`refresh-token=${tokens.refreshToken}; Path=/; Max-Age=${
-			30 * 24 * 3600
-		}; SameSite=Lax`
-	);
-
-	return new Response(
-		JSON.stringify({ success: true, isLoggedIn: true, isAnon: true }),
-		{
-			headers,
-		}
-	);
 }
 
 export default function PageLayout() {
@@ -101,8 +67,8 @@ export default function PageLayout() {
 	const { isLoggedIn, isAnon } = useLoaderData<typeof loader>();
 
 	const handleLogout = () => {
-		Cookies.remove('access-token');
-		Cookies.remove('refresh-token');
+		Cookies.remove('accessToken');
+		Cookies.remove('refreshToken');
 		navigate('/', { replace: true });
 	};
 

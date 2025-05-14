@@ -1,114 +1,34 @@
+// api.ts
 import ky from 'ky';
-import { useNavigate } from 'react-router';
-import { redirect } from 'react-router';
-import Cookies from 'js-cookie';
-import type { KyRequest, Options } from 'ky';
-import type { KyResponse } from 'ky';
 
-interface TokenRefreshResponse {
-	accessToken: string;
-}
-
-interface ApiErrorData {
-	message?: string;
-	[key: string]: unknown;
-}
-
-export class ApiError extends Error {
-	constructor(
-		public status: number,
-		public message: string,
-		public data?: ApiErrorData
-	) {
-		super(message);
-		this.name = 'ApiError';
-	}
-}
-
-// Initialize navigation
-let navigate: ReturnType<typeof useNavigate>;
-
-export const setNavigate = (nav: ReturnType<typeof useNavigate>) => {
-	navigate = nav;
-};
-
-// Server-side API client
-export const serverApi = ky.extend({
+// Create an API client that works in both browser and server contexts
+export const api = ky.create({
+	prefixUrl: process.env.API_URL,
+	credentials: 'include', // Important! This includes cookies in the request
 	hooks: {
-		beforeRequest: [],
-		afterResponse: [],
-	},
-});
-
-// Client-side API client
-export const api = ky.extend({
-	hooks: {
-		beforeRequest: [
-			async (request) => {
-				const accessToken = Cookies.get('access-token');
-				const refreshToken = Cookies.get('refresh-token');
-
-				if (accessToken) {
-					request.headers.set('Authorization', `Bearer ${accessToken}`);
-				}
-
-				// Try to refresh token if we have a refresh token
-				if (!accessToken && refreshToken) {
-					try {
-						const refreshResponse = await serverApi.post(
-							`${process.env.API_URL}/api/v1/auth/refresh`,
-							{
-								json: { refreshToken },
-							}
-						);
-
-						if (!refreshResponse.ok) {
-							throw new ApiError(
-								refreshResponse.status,
-								'Failed to refresh token'
-							);
-						}
-
-						const refreshData = await refreshResponse.json();
-						const { accessToken: newAccessToken } =
-							refreshData as TokenRefreshResponse;
-						Cookies.set('access-token', newAccessToken);
-						request.headers.set('Authorization', `Bearer ${newAccessToken}`);
-					} catch (error) {
-						console.error('Token refresh failed:', error);
-						// Remove both tokens if refresh fails
-						Cookies.remove('access-token');
-						Cookies.remove('refresh-token');
-						throw error;
-					}
-				}
-			},
-		],
 		afterResponse: [
-			async (request: KyRequest, options: Options, response: KyResponse) => {
-				if (!response.ok) {
-					const errorData = await response.json().catch(() => ({}));
-					throw new ApiError(
-						response.status,
-						response.statusText,
-						errorData as ApiErrorData
-					);
-				}
-
+			async (request, options, response) => {
+				// If we get a 401, the request will be automatically retried after
+				// the refresh endpoint is called by the browser due to HTTP-only cookies
 				if (response.status === 401) {
-					// Remove tokens
-					Cookies.remove('access-token');
-					Cookies.remove('refresh-token');
+					// The server will handle refreshing the token using the HTTP-only cookie
+					const refreshResponse = await fetch('/auth/refresh', {
+						method: 'POST',
+						credentials: 'include', // Include cookies
+					});
 
-					// Redirect to login
-					if (navigate) {
-						navigate('/login', { replace: true });
+					if (refreshResponse.ok) {
+						// If refresh succeeded, retry the original request
+						// The new token is already in the cookies
+						return ky(request);
+					} else {
+						// If refresh failed, we need to redirect to login
+						if (typeof window !== 'undefined') {
+							window.location.href = '/login';
+						}
+						throw new Error('Authentication failed');
 					}
-
-					// Throw error to be caught by the caller
-					throw new ApiError(401, 'Unauthorized');
 				}
-				return response;
 			},
 		],
 	},

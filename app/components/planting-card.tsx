@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	TrashIcon,
 	PlusIcon,
@@ -29,7 +29,12 @@ export function PlantingCard({
 	isLoading,
 	diary,
 }: PlantingCardProps) {
-	const plantDate = formatDate(new Date(createdAt));
+	const [formattedDate, setFormattedDate] = useState('');
+
+	useEffect(() => {
+		// Only runs on client
+		setFormattedDate(formatDate(new Date(createdAt)));
+	}, [createdAt]);
 
 	return (
 		<Card>
@@ -103,7 +108,7 @@ export function PlantingCard({
 				<UpdateHarvestModal id={id} isLoading={isLoading} />
 				<div className="mt-2 flex flex-col gap-2">
 					<div>
-						<span className="text-gray-500">Planted:</span> {plantDate}
+						<span className="text-gray-500">Planted:</span> {formattedDate}
 					</div>
 					<div>
 						<span className="text-gray-500">Quantity:</span> {quantity}
