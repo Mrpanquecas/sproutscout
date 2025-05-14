@@ -5,7 +5,8 @@ import type {
 } from '~/types/garden.types';
 import { getCookieValue } from './cookie-util';
 import type { OpenMeteoResponse } from '~/types/open-meteo.types';
-import { serverApi } from './api';
+
+import ky from 'ky';
 
 export async function getGarden(request: Request): Promise<Garden | undefined> {
 	const cookieList = request.headers.get('Cookie');
@@ -13,7 +14,7 @@ export async function getGarden(request: Request): Promise<Garden | undefined> {
 
 	const accessToken = getCookieValue(cookieList, 'access-token');
 	try {
-		const resp = await serverApi
+		const resp = await ky
 			.get<Garden>(`${process.env.API_URL}/api/v1/planting/all`, {
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
@@ -33,7 +34,7 @@ export async function getVegetables(request: Request) {
 
 	const accessToken = getCookieValue(cookieList, 'access-token');
 	try {
-		const data = await serverApi
+		const data = await ky
 			.get<VegetablesResponse>(`${process.env.API_URL}/api/v1/plant/all`, {
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
@@ -56,7 +57,7 @@ export async function getVegetableDetails(
 
 	const accessToken = getCookieValue(cookieList, 'access-token');
 	try {
-		const resp = await serverApi
+		const resp = await ky
 			.get<Vegetable>(`${process.env.API_URL}/api/v1/plant/${vegetableId}`, {
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
@@ -82,7 +83,7 @@ type ApiAuthResponse = {
 
 export const authAnonUser = async (): Promise<AuthResponse | undefined> => {
 	try {
-		const resp = await serverApi
+		const resp = await ky
 			.post<ApiAuthResponse>(`${process.env.API_URL}/api/v1/auth/anon/register`)
 			.json();
 
@@ -103,7 +104,7 @@ export const getUserLocationWeather = async ({
 	longitude: number;
 }): Promise<OpenMeteoResponse | undefined> => {
 	try {
-		const resp = await serverApi
+		const resp = await ky
 			.get<OpenMeteoResponse>(
 				`${process.env.WEATHER_API_URL}/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&daily=precipitation_sum`
 			)

@@ -10,17 +10,64 @@ import {
 	redirect,
 } from 'react-router';
 import type { Route } from './+types/guide';
-import { getGarden, getVegetables } from '~/utils/loader-helpers';
 import { formatYield } from '~/utils/format-yield';
 import { addPlanting } from '~/utils/action-helpers';
 import { monthNames } from '~/types/garden.types';
 import { Card, CardActions, CardBody, CardTitle } from '~/components/card';
+import { ensureAnonymousAuth } from '~/auth.server';
+import { refreshTokenIfNeeded } from '~/auth.server';
+import { createServerKy } from '~/api.sever';
 
 export async function loader({ request }: Route.LoaderArgs) {
-	const plantsRequest = await getVegetables(request);
-	const gardenRequest = await getGarden(request);
+	// Create headers for response
+	const headers = new Headers();
 
-	return { plants: plantsRequest, garden: gardenRequest };
+	try {
+		// Handle anonymous auth if no cookies present
+		const anonAuthResult = await ensureAnonymousAuth(request);
+		// If ensureAnonymousAuth returns tokens, use them
+		let accessToken = anonAuthResult?.accessToken;
+		let refreshToken = anonAuthResult?.refreshToken;
+
+		console.log('Anonymous auth result:', anonAuthResult);
+
+		if (!accessToken) {
+			const refreshResult = await refreshTokenIfNeeded(request);
+			accessToken = refreshResult?.accessToken;
+			refreshToken = refreshResult?.refreshToken;
+			console.log('Refresh result:', refreshResult);
+		}
+
+		// Set updated cookies in response headers
+		if (accessToken) {
+			headers.append(
+				'Set-Cookie',
+				`accessToken=${accessToken}; Path=/; HttpOnly; Max-Age=${3600}; SameSite=Lax; Secure=true`
+			);
+		}
+		if (refreshToken) {
+			headers.append(
+				'Set-Cookie',
+				`refreshToken=${refreshToken}; Path=/; HttpOnly; Max-Age=${
+					60 * 60 * 24 * 30
+				}; SameSite=Lax; Secure=true`
+			);
+		}
+
+		headers.set('Content-Type', 'application/json');
+		const api = createServerKy(request, accessToken);
+
+		const plantsRequest = await api.get('api/v1/plant/all').json();
+
+		return new Response(JSON.stringify({ plants: plantsRequest.plants }), {
+			headers,
+		});
+	} catch (error) {
+		console.error('Error in guide route:', error);
+		return new Response(JSON.stringify({ plants: [] }), {
+			headers,
+		});
+	}
 }
 
 export async function action({ request }: Route.ActionArgs) {
