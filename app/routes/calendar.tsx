@@ -3,8 +3,8 @@ import { useGardenStore } from '../store/store';
 import { climateZones } from '~/utils/constants';
 import { useLoaderData } from 'react-router';
 import type { Route } from './+types/calendar';
-import { getVegetables } from '~/utils/loader-helpers';
 import CalendarTable from '~/components/calendar-table';
+import { getVegetables } from '~/utils/loader-helpers';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	const plants = await getVegetables(request);

@@ -11,60 +11,34 @@ import Cookies from 'js-cookie';
 import type { Route } from './+types/layout';
 import { UserIcon } from '@heroicons/react/16/solid';
 import { Menu } from '~/components/menu';
-import { checkLoginStatus } from '~/utils/check-login-status';
-import { accessTokenCookie, refreshTokenCookie } from '~/auth.server';
-import { refreshTokenIfNeeded } from '~/auth.server';
-import { ensureAnonymousAuth } from '~/auth.server';
+import { ensureJwtAuth } from '~/auth.server';
+import { jwtDecode } from 'jwt-decode';
 
 export async function loader({ request }: Route.LoaderArgs) {
 	try {
-		await ensureAnonymousAuth(request);
+		const { accessToken, headers } = await ensureJwtAuth(request);
 
-		const { accessToken, refreshToken } = await refreshTokenIfNeeded(request);
+		const user = jwtDecode<{ anon: boolean }>(accessToken || '');
 
-		// Create response headers for setting cookies
-		const headers = new Headers();
-
-		if (accessToken) {
-			headers.append(
-				'Set-Cookie',
-				await accessTokenCookie.serialize(accessToken)
-			);
-		}
-
-		if (refreshToken) {
-			headers.append(
-				'Set-Cookie',
-				await refreshTokenCookie.serialize(refreshToken)
-			);
-		}
-
-		// Check if user is authenticated
-		const isAuthenticated = !!accessToken;
-
-		// Return auth status and headers for cookie setting
-		return { isAuthenticated, headers };
+		headers.append('Content-Type', 'application/json');
+		return new Response(
+			JSON.stringify({
+				isAnon: user.anon,
+			}),
+			{
+				headers,
+			}
+		);
 	} catch (error) {
-		// If token refresh fails, clear cookies
-		const headers = new Headers();
-		headers.append(
-			'Set-Cookie',
-			await accessTokenCookie.serialize('', { maxAge: 0 })
-		);
-		headers.append(
-			'Set-Cookie',
-			await refreshTokenCookie.serialize('', { maxAge: 0 })
-		);
-
 		console.error('Error refreshing token:', error);
-		return { isAuthenticated: false, headers };
+		return { isAnon: true };
 	}
 }
 
 export default function PageLayout() {
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
-	const { isLoggedIn, isAnon } = useLoaderData<typeof loader>();
+	const { isAnon } = useLoaderData<typeof loader>();
 
 	const handleLogout = () => {
 		Cookies.remove('accessToken');
@@ -82,7 +56,7 @@ export default function PageLayout() {
 						</h1>
 					</div>
 					<div className="navbar-end">
-						{checkLoginStatus({ isLoggedIn, isAnon }) ? (
+						{isAnon === false ? (
 							<button onClick={handleLogout} className="btn btn-sm btn-ghost">
 								<UserIcon className="size-4 text-white" />
 								Logout

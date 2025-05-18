@@ -1,3 +1,4 @@
+import type { Units } from '~/types/garden.types';
 import { getCookieValue } from './cookie-util';
 import ky from 'ky';
 
@@ -93,7 +94,9 @@ export async function updateDiary(
 }
 
 type UpdateHarvestPayload = {
-	newHarvest: number;
+	quantity: number;
+	id: string;
+	unit: Units;
 };
 
 export async function updateHarvest(
@@ -106,13 +109,18 @@ export async function updateHarvest(
 	const accessToken = getCookieValue(cookieList, 'accessToken');
 
 	const plantingId = formData.get('id');
-	const newHarvest = formData.get('quantity');
+	const quantity = formData.get('quantity');
 
-	const payload = JSON.stringify({ newHarvest });
+	const payload = JSON.stringify({
+		quantity,
+		plantingId,
+		unit: 'KG',
+		createdAt: Date.now(),
+	});
 
 	try {
-		await ky.patch<UpdateHarvestPayload>(
-			`${process.env.API_URL}/api/v1/planting/${plantingId}`,
+		await ky.post<UpdateHarvestPayload>(
+			`${process.env.API_URL}/api/v1/harvest/add`,
 			{
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
@@ -140,9 +148,6 @@ export async function addPlanting(request: Request): Promise<void> {
 	if (!cookieList) return;
 
 	const accessToken = getCookieValue(cookieList, 'accessToken');
-
-	console.log('ACCESS TOKEN', accessToken);
-	console.log('COOKIE LIST', cookieList);
 
 	const payload = JSON.stringify({ quantity, plantId });
 	try {

@@ -5,44 +5,33 @@ import type {
 } from '~/types/garden.types';
 import { getCookieValue } from './cookie-util';
 import type { OpenMeteoResponse } from '~/types/open-meteo.types';
-
+import { ensureJwtAuth } from '~/auth.server';
 import ky from 'ky';
+import { serverApi } from '~/api.sever';
 
 export async function getGarden(request: Request): Promise<Garden | undefined> {
-	const cookieList = request.headers.get('Cookie');
-	if (!cookieList) return;
-
-	const accessToken = getCookieValue(cookieList, 'access-token');
 	try {
-		const resp = await ky
-			.get<Garden>(`${process.env.API_URL}/api/v1/planting/all`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			})
-			.json();
+		const { accessToken } = await ensureJwtAuth(request);
 
-		return resp;
+		const api = serverApi(accessToken);
+
+		const gardenRequest = await api.get<Garden>('api/v1/planting/all');
+		const garden = await gardenRequest.json();
+		return garden;
 	} catch (error) {
 		console.log(error);
 	}
 }
 
 export async function getVegetables(request: Request) {
-	const cookieList = request.headers.get('Cookie');
-	if (!cookieList) return;
-
-	const accessToken = getCookieValue(cookieList, 'access-token');
 	try {
-		const data = await ky
-			.get<VegetablesResponse>(`${process.env.API_URL}/api/v1/plant/all`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			})
-			.json();
+		const { accessToken } = await ensureJwtAuth(request);
 
-		return data.plants;
+		const api = serverApi(accessToken);
+
+		const plantsRequest = await api.get<VegetablesResponse>('api/v1/plant/all');
+		const plantData = await plantsRequest.json();
+		return plantData.plants;
 	} catch (error) {
 		console.log(error);
 	}
