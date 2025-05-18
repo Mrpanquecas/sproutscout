@@ -102,7 +102,7 @@ enum SpacingRequirement {
 	VERY_WIDE = 'VERY_WIDE', // 90+ cm
 }
 
-enum Units {
+export enum Units {
 	KG = 'KG', // 5-15 cm
 	GRAMS = 'GRAMS', // 15-30 cm
 }

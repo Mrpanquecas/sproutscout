@@ -90,7 +90,6 @@ export function PlantingCard({
 										}
 										type="button"
 										className="btn btn-warning btn-block"
-										disabled={true}
 									>
 										<PlusIcon className="size-4" /> Add Harvest
 									</button>

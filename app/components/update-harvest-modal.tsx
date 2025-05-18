@@ -24,6 +24,7 @@ export const UpdateHarvestModal = ({
 						name="quantity"
 						required
 						step={0.1}
+						min={0}
 						type="number"
 						disabled={isLoading}
 					/>
